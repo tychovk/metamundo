@@ -1,1 +1,9 @@
+# temp files
 *.pyc
+/__pyc__
+
+# redis server files
+*.rdb
+
+# virtual env folder
+/metamundo
