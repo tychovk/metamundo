@@ -60,6 +60,7 @@ class BlobManager:
 
         
 
+"""
 
 class PeriodicTasks(PeriodicTask):
     run_every = timedelta(seconds=5)
@@ -78,5 +79,4 @@ class Player:
             y_max = world_grid.y_bounds[1]
             self.x = random.randrange(x_min, x_max)
             self.y = random.randrange(y_min, y_max)
-
-
+"""
