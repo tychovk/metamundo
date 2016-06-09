@@ -1,3 +1,5 @@
+** Test run to see if Kivy and KivEnt is viable for another project **
+
 We're using python3.5 for this project!
 
 Kivy and KivEnt
