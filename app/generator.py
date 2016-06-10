@@ -21,14 +21,24 @@ class WorldGrid:
 
 class BlobManager:
     def __init__(self, world_grid):
-        first_blob_coords = [random.randrange(0, world_grid.x_bounds[1]), 
-                             random.randrange(0,world_grid.y_bounds[1])]
         self.blob_id = 1
         self.day = 0
-        self.blob_dict = {self.blob_id: {'birthdate': self.day, 
-                                    'coords': first_blob_coords}}
-        self.blob_id += 1
+        self.blob_dict = {}
         
+        
+    def coords_gen(self, world_grid):
+        x_bounds = world_grid.x_bounds
+        y_bounds = world_grid.y_bounds
+        new_coords = [random.randrange(x_bounds[0], x_bounds[1]), 
+                      random.randrange(y_bounds[0], y_bounds[1])]
+        return new_coords
+
+
+    def spawn_first_blob(self, world_grid):
+        first_blob_coords = self.coords_gen(world_grid)
+        self.blob_dict.update({self.blob_id: {'birthdate': self.day, 
+                                              'coords': first_blob_coords}})
+        self.blob_id += 1
 
 
 
@@ -37,12 +47,10 @@ class BlobManager:
         '''
         Spawns a new lone blob more than 500 steps away from other blobs
         '''
-        self.day += 1
-        new_blob_coords = [random.randrange(0, world_grid.x_bounds[1]), 
-                                 random.randrange(0,world_grid.y_bounds[1])]
 
-        new_blob_x = random.randrange(0, world_grid.x_bounds[1])
-        new_blob_y = random.randrange(0,world_grid.y_bounds[1])
+        new_blob_coords = self.coords_gen(world_grid)
+        new_blob_x = new_blob_coords[0]
+        new_blob_y = new_blob_coords[1]
 
         for blob in self.blob_dict:
             old_blob_x = self.blob_dict[blob]['coords'][0]
@@ -58,7 +66,14 @@ class BlobManager:
             self.blob_id += 1
             break
 
+    def time_progression(self, world_grid):
+        self.day += 1
+        pass
         
+    def start(self, world_grid):
+        self.spawn_first_blob(world_grid)
+        #time_progression(world_grid)
+        #spawn_blob(self, world_grid)
 
 
 class Player:

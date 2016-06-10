@@ -1,6 +1,6 @@
 #!usr/bin/env python3
 import unittest
-from app.app import WorldGrid, BlobManager, Player
+from app.generator import WorldGrid, BlobManager, Player
 
 
 class MetamundoTest(unittest.TestCase):
@@ -12,8 +12,9 @@ class MetamundoTest(unittest.TestCase):
         self.assertEqual(len(world_grid.coords), 1200)
         self.assertEqual(len(world_grid.coords[0]), 1200)
 
-        # When the game starts, on the grid, every 5 seconds a Blob (B) spawns
+        # When the game starts, one blob is already spawned
         blob_manager = BlobManager(world_grid)
+        blob_manager.start(world_grid)
         num_blobs = len(blob_manager.blob_dict)
         self.assertNotEqual(num_blobs, 0)
 
