@@ -19,17 +19,26 @@ class MetamundoTest(unittest.TestCase):
         self.assertNotEqual(num_blobs, 0)
 
         # on a random spot on the grid...
-        blob_coords_list = [blob_manager.blob_dict[blob]['coords'] for blob in blob_manager.blob_dict]
+        blob_coords_list = [blob_manager.blob_dict[blob]['coords'] for \
+                            blob in blob_manager.blob_dict]
         
         for blob_coords in blob_coords_list:
             self.assertIn(blob_coords[0], world_grid.coords)
             self.assertIn(blob_coords[1], world_grid.coords[0])
 
         # A spot that is at least 600 steps away from another blob.
-        # Let's spawn a second one.
-        blob_manager.spawn_blob(world_grid)
+        # Let's spawn a second one. It's possible that the blob that would be 
+        # spawned is too close to other blobs, in that case we should get a
+        # console log message for that.
+        new_blob_result = blob_manager.spawn_blob(world_grid)
+        function_worked = None
 
+        if new_blob_result == 'New blob would be too close to old blobs. ' \
+                                'No new blob today!' or \
+           len(blob_manager.blob_dict) == 2:
+            function_worked = True
 
+        self.assertTrue(function_worked)
 
         # Every 2 minutes, in a spot adjacent to a B spot, a Blob (B) can spawn 
         # ..unless:

@@ -6,6 +6,9 @@ from celery.task import PeriodicTask
 from datetime import timedelta
 from . import cel_app
 import math
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 class WorldGrid:
     def __init__(self):
@@ -33,16 +36,6 @@ class BlobManager:
                       random.randrange(y_bounds[0], y_bounds[1])]
         return new_coords
 
-
-    def spawn_first_blob(self, world_grid):
-        first_blob_coords = self.coords_gen(world_grid)
-        self.blob_dict.update({self.blob_id: {'birthdate': self.day, 
-                                              'coords': first_blob_coords}})
-        self.blob_id += 1
-
-
-
-    #@cel_app.task()
     def spawn_blob(self, world_grid):
         '''
         Spawns a new lone blob more than 500 steps away from other blobs
@@ -60,18 +53,22 @@ class BlobManager:
                                  (new_blob_y - old_blob_y)**2)
 
             if distance < 600:
-                continue
-            self.blob_dict.update({self.blob_id: {'birthdate': self.day,
-                                                  'coords': new_blob_coords}})
-            self.blob_id += 1
-            break
+                logging.info('New blob would be too close to old blobs. ' \
+                              'No new blob today!')
+                return 'New blob would be too close to old blobs. ' \
+                              'No new blob today!'
 
+        self.blob_dict.update({self.blob_id: {'birthdate': self.day,
+                                                  'coords': new_blob_coords}})
+        self.blob_id += 1
+
+    #@cel_app.task()
     def time_progression(self, world_grid):
         self.day += 1
         pass
         
     def start(self, world_grid):
-        self.spawn_first_blob(world_grid)
+        self.spawn_blob(world_grid)
         #time_progression(world_grid)
         #spawn_blob(self, world_grid)
 
