@@ -1,6 +1,7 @@
 #!usr/bin/env python3
 import unittest
 from app.generator import WorldGrid, BlobManager, Player
+import math
 
 
 class MetamundoTest(unittest.TestCase):
@@ -28,17 +29,30 @@ class MetamundoTest(unittest.TestCase):
 
         # A spot that is at least 600 steps away from another blob.
         # Let's spawn a second one. It's possible that the blob that would be 
-        # spawned is too close to other blobs, in that case we should get a
-        # console log message for that.
+        # spawned is too close to other blobs (within 600 steps), in that case:
+        # - the console is logged
+        # - a message is returned dictating that
         new_blob_result = blob_manager.spawn_blob(world_grid)
         function_worked = None
 
         if new_blob_result == 'New blob would be too close to old blobs. ' \
-                                'No new blob today!' or \
-           len(blob_manager.blob_dict) == 2:
+                                'No new blob today!':
             function_worked = True
 
+        elif len(blob_manager.blob_dict) == 2:
+            coords_1 = blob_manager.blob_dict[1]['coords']
+            coords_2 = blob_manager.blob_dict[2]['coords']
+
+            distance = math.sqrt((coords_1[0] - coords_2[0])**2 +
+                                  (coords_1[1] - coords_2[1])**2)
+
+            if distance >= 600:
+                function_worked = True
+
         self.assertTrue(function_worked)
+
+
+
 
         # Every 2 minutes, in a spot adjacent to a B spot, a Blob (B) can spawn 
         # ..unless:
