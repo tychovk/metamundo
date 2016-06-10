@@ -7,10 +7,11 @@ from datetime import timedelta
 from . import cel_app
 import math
 import logging
+from celery import Task
 
 logging.basicConfig(level=logging.INFO)
 
-class WorldGrid:
+class WorldGrid(Task):
     def __init__(self):
         '''
         The only information the grid has, is if it's occupied or not.
@@ -19,7 +20,8 @@ class WorldGrid:
         self.y_bounds = [0,1200]
         self.coords = {x: {y: None for y in range(self.x_bounds[1])} 
                         for x in range(self.y_bounds[1])}
-        self.date = 0
+        self.day = 0
+
 
 
 class BlobManager:
@@ -49,8 +51,10 @@ class BlobManager:
             old_blob_x = self.blob_dict[blob]['coords'][0]
             old_blob_y = self.blob_dict[blob]['coords'][1]
 
-            distance = math.sqrt((new_blob_x - old_blob_y)**2 +
+            distance = math.sqrt((new_blob_x - old_blob_x)**2 +
                                  (new_blob_y - old_blob_y)**2)
+            print (distance)                                        # TO BE REMOVED LATER
+            print (new_blob_coords, [old_blob_x,old_blob_y])        # TO BE REMOVED LATER
 
             if distance < 600:
                 logging.info('New blob would be too close to old blobs. ' \
@@ -62,14 +66,16 @@ class BlobManager:
                                                   'coords': new_blob_coords}})
         self.blob_id += 1
 
-    #@cel_app.task()
-    def time_progression(self, world_grid):
+    @cel_app.task(name="time_progression")
+    def time_progression():
         self.day += 1
-        pass
+        print (self.day)
+        return
+
         
     def start(self, world_grid):
         self.spawn_blob(world_grid)
-        #time_progression(world_grid)
+        self.time_progression()
         #spawn_blob(self, world_grid)
 
 

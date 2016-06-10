@@ -13,9 +13,9 @@ class MetamundoTest(unittest.TestCase):
         self.assertEqual(len(world_grid.coords), 1200)
         self.assertEqual(len(world_grid.coords[0]), 1200)
 
-        # When the game starts, one blob is already spawned
+        # In the beginning of the game, one blob is already spawned
         blob_manager = BlobManager(world_grid)
-        blob_manager.start(world_grid)
+        blob_manager.spawn_blob(world_grid)
         num_blobs = len(blob_manager.blob_dict)
         self.assertNotEqual(num_blobs, 0)
 
@@ -44,13 +44,33 @@ class MetamundoTest(unittest.TestCase):
             coords_2 = blob_manager.blob_dict[2]['coords']
 
             distance = math.sqrt((coords_1[0] - coords_2[0])**2 +
-                                  (coords_1[1] - coords_2[1])**2)
+                                 (coords_1[1] - coords_2[1])**2)
+
+            print (distance)                           # TO BE REMOVED LATER
+            print (coords_1, coords_2)                 # TO BE REMOVED LATER
+
 
             if distance >= 600:
                 function_worked = True
 
+
         self.assertTrue(function_worked)
 
+        # When we actually start the game,
+        # periodically new blobs spawn following the rules above. Let's reset.
+        blob_manager = BlobManager(world_grid)
+        # We're at day 0
+        init_day = blob_manager.day
+        self.assertEqual(init_day, 0)
+
+        blob_manager.start(world_grid)
+        # There should be one blob now:
+        num_blobs = len(blob_manager.blob_dict)
+        self.assertEqual(num_blobs, 1)
+
+        # And we're at day 1:
+        start_day = blob_manager.day
+        self.assertEqual(start_day, 1)
 
 
 

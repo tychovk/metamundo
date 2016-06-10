@@ -1,0 +1,13 @@
+This is still highly experimental, but at least celery seems to work:
+
+Make sure you have redis installed, and running in a terminal window:
+
+redis-server
+
+In another terminal window, execute:
+
+celery worker -A app.cel_app -I config -c 3 --loglevel=info
+
+And for the beat, also in a terminal window:
+
+celery beat -A app.cel_app
