@@ -1,5 +1,3 @@
-#readme.md
-
 #Metamundo
 
 In this 2D world, there are a lot of trivial things that are of no importance. And, there are... Blobs.
