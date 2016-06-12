@@ -37,3 +37,6 @@ browser.get("http://localhost:8000")
 ```
 
 http://stackoverflow.com/questions/22130109/cant-use-chrome-driver-for-selenium
+
+
+http://stackoverflow.com/questions/10404160/when-to-use-explicit-wait-vs-implicit-wait-in-selenium-webdriver#28067495 <-- may also be interesting in case of erraticly different test results when ran a few times consecutively.
