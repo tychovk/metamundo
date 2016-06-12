@@ -1,0 +1,26 @@
+{
+  "name": "metamundo",
+  "version": "1.0.0",
+  "description": "In this 2D world, there are a lot of trivial things that are of no importance. And, there are... Blobs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tychovk/metamundo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tychovk/metamundo/issues"
+  },
+  "homepage": "https://github.com/tychovk/metamundo#readme",
+  "devDependencies": {
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-firefox-launcher": "^1.0.0",
+    "karma-jasmine": "^1.0.2"
+  }
+}

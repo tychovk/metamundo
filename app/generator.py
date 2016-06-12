@@ -66,8 +66,8 @@ class BlobManager:
                                                   'coords': new_blob_coords}})
         self.blob_id += 1
 
-    @cel_app.task(name="time_progression")
-    def time_progression():
+   #@cel_app.task(name="time_progression")
+    def time_progression(self):
         self.day += 1
         print (self.day)
         return
