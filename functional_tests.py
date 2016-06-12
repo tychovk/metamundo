@@ -2,11 +2,7 @@
 import unittest
 from app.generator import WorldGrid, BlobManager, Player
 import math
-
-import os
 from selenium import webdriver
-
-
 
 
 class MetamundoTest(unittest.TestCase):
@@ -20,9 +16,8 @@ class MetamundoTest(unittest.TestCase):
 
     def test_world(self):
 
+        # We go to our live homepage:
         self.browser.get("http://localhost:8000")
-
-        self.assertIn('Django', self.browser.title)
 
         # There is a 2D world that is organized in a rectangular grid with
         # coordinates. The world starts as a grid that is 1200 x 1200.
