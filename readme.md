@@ -14,3 +14,24 @@ Plans are to:
 - Have the map expand automatically as players reach the periphery (meaning blobs can spawn there too, but players as well)
 - Have a visual representation for this, in a web environment as well as a smartphone app
 - Have links with apps that track real-life (health) performance, e.g. steps walked, to increase player's speed / energy / blob carrying capacity (temporarily).
+
+
+
+
+
+
+
+#Setup for testing
+
+###Selenium
+If selenium testing doesn't work for Firefox, try it for chrome:
+- Install latest version of chrome "sudo apt-get install chromium-browser"
+- Get appropriate version of chrome driver from http://chromedriver.storage.googleapis.com/index.html
+- Unzip the chromedriver.zip
+- Move the file to /usr/bin directory sudo mv chromedriver /usr/bin
+- Go to /usr/bin directory and you would need to run "chmod a+x chromedriver" to mark it executable. 
+
+browser = webdriver.Chrome()
+browser.get("http://localhost:8000")
+
+ `http://stackoverflow.com/questions/22130109/cant-use-chrome-driver-for-selenium`
