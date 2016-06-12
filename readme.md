@@ -31,7 +31,9 @@ If selenium testing doesn't work for Firefox, try it for chrome:
 - Move the file to /usr/bin directory sudo mv chromedriver /usr/bin
 - Go to /usr/bin directory and you would need to run "chmod a+x chromedriver" to mark it executable. 
 
+```
 browser = webdriver.Chrome()
 browser.get("http://localhost:8000")
+```
 
- `http://stackoverflow.com/questions/22130109/cant-use-chrome-driver-for-selenium`
+http://stackoverflow.com/questions/22130109/cant-use-chrome-driver-for-selenium
