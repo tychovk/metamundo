@@ -26,7 +26,7 @@ Plans are to:
 ###Selenium
 If selenium testing doesn't work for Firefox, try it for chrome:
 - Install latest version of chrome "sudo apt-get install chromium-browser"
-- Get appropriate version of chrome driver from http://chromedriver.storage.googleapis.com/index.html
+- Get appropriate version of chrome driver from http://chromedriver.storage.googleapis.com/index.html (MAKE SURE! That you have the latest version. Check on what date it was added/modified.)
 - Unzip the chromedriver.zip
 - Move the file to /usr/bin directory sudo mv chromedriver /usr/bin
 - Go to /usr/bin directory and you would need to run "chmod a+x chromedriver" to mark it executable. 
@@ -45,6 +45,7 @@ http://stackoverflow.com/questions/10404160/when-to-use-explicit-wait-vs-implici
 
 # Django & Angular integration
 
+```
 var app = angular.module("testMetamundo", []);
 
 app.config(['$interpolateProvider', function($interpolateProvider) {
@@ -64,6 +65,7 @@ app.controller('testController', function() {
         this.data[name] = data;
     };
 });
+
 ```
 
 Changed the interpolation (templating brackets) to `:{ <content> }:`
@@ -71,7 +73,8 @@ I have this rudimentary controller there, with data object data
 and most importantly, a set function
 on the flask side
 
- ```from testapp import app
+ ```
+ from testapp import app
 from flask import render_template
 import json
 
@@ -90,7 +93,8 @@ i initialy used JSON loads, but found it wasn't necessary - I just passed in the
 and that's because in `index.html`...
 
 
- ```<!DOCTYPE html>
+ ```
+ <!DOCTYPE html>
 <html lang='en', ng-app='testMetamundo'>
     <head>
         <script type='text/javascript' src='static/node_modules/angular/angular.min.js'></script>
@@ -123,6 +127,7 @@ and that's because in `index.html`...
         </p>
     </body>
 </html>
+
 ```
 
 notice `{{ options|tojson|safe }}`
