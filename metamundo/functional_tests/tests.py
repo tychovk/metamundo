@@ -1,10 +1,101 @@
 #!usr/bin/env python3
-from Django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from app.generator import WorldGrid, BlobManager, Player
-import math
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait 
+from selenium.common.exceptions import NoSuchElementException
+
+import math
 
 
+
+class MetamundoControler(StaticLiveServerTestCase):
+
+
+
+    def setUp(self):
+        self.browser = webdriver.Chrome()
+        self.browser.implicitly_wait(1)
+
+    def tearDown(self):
+        self.browser.quit()
+
+    def is_element_present(self, how, what, where=None):
+        if where is None:
+            where = self
+        try:
+            where.browser.find_element(by=how, value=what)
+        except NoSuchElementException as e:
+            return False
+        return True
+
+
+    def test_control_functions(self):
+
+        # Management gets to the control panel:
+        self.browser.get("http://localhost:8000/control_panel")
+
+        # We see it in the title
+        self.assertIn('Metamundo Control Panel', self.browser.title)
+
+        # There is no grid yet
+        self.assertFalse(self.is_element_present(By.ID, "world_grid"))
+
+        # We get to push a button to start the world
+        start_world_box = self.browser.find_element_by_id('start_world')
+        start_world_box.send_keys(Keys.ENTER)
+
+        # Now the page contains a grid of 500x500 that is empty
+        self.assertTrue(self.is_element_present(By.ID, "world_grid"))
+        world_grid = self.browser.find_element_by_id('world_grid')
+
+
+        for x in range(500*500):
+            self.assertTrue(self.is_element_present(By.ID, x, where=world_grid))
+
+
+
+        # It has a button in the midde of the grid that reads 
+        #   "And so it begins..."
+
+
+        # Clicking anywhere on the grid makes the message go away
+
+
+        # And a first blob is spawned.
+
+
+        # There now is another button below the grid that reads 
+        #   "Spawn another blob"
+
+
+
+        self.fail('Finish writing tests!')
+
+
+        # The user sees a grid of 500 by 500. 
+        grid = self.browser.find_element_by_id('world_grid')
+        
+
+        # .. and also sees a button that says "Spawn Solitary Blob on a 
+        # random spot", when it's pushed, the user sees a blob spawn on a 
+        # random spot on the map.
+        
+        # There is another button that reads "Evolve Blobs".
+        # This button is clicked, and all blob-units evolve in a random 
+        # direction.
+
+        # The user can also sees a "Let there be time" a button that starts
+        # the time and simulates the previously mentioned steps. 
+        
+        # The button is replaced with a button that says "Stop the time".
+        # This button is clicked, and the time is stopped.
+
+
+
+
+"""
 class MetamundoTest(StaticLiveServerTestCase):
 
     def setUp(self):
@@ -20,16 +111,16 @@ class MetamundoTest(StaticLiveServerTestCase):
         self.browser.get("http://localhost:8000")
 
         # There is a 2D world that is organized in a rectangular grid with
-        # coordinates. We see the world starts as a grid that is 500 x 500.
+        # coordinates. The world starts as a grid that is 500 x 500.
 
-        #self.assertEqual(len(world_grid.coords), 500)
-        #self.assertEqual(len(world_grid.coords[0]), 500)
+        self.assertEqual(len(world_grid.coords), 500)
+        self.assertEqual(len(world_grid.coords[0]), 500)
 
-        # If we press start, one blob is already spawned....
-        #blob_manager = BlobManager(world_grid)
-        #blob_manager.spawn_blob(world_grid)
-        #num_blobs = len(blob_manager.blob_dict)
-        #self.assertNotEqual(num_blobs, 0)
+        # In the beginning of the game, one blob is already spawned
+        blob_manager = BlobManager(world_grid)
+        blob_manager.spawn_blob(world_grid)
+        num_blobs = len(blob_manager.blob_dict)
+        self.assertNotEqual(num_blobs, 0)
 
         # on a random spot on the grid...
         blob_coords_list = [blob_manager.blob_dict[blob]['coords'] for \
@@ -122,47 +213,4 @@ class MetamundoTest(StaticLiveServerTestCase):
 
         # Blob characteristics:
         # To be determined
-
-
-class MetamundoControler(unittest.TestCase):
-
-    def setUp(self):
-        self.browser = webdriver.Chrome()
-        self.browser.implicitly_wait(4)
-
-    def tearDown(self):
-        self.browser.quit()
-
-    def test_control_functions(self):
-
-        # Management gets to the control panel:
-        self.browser.get("http://localhost:8000/control_panel/")
-
-        # We see it in the title
-        self.assertIn('Metamundo Control Panel', self.browser.title)
-
-        # The user sees a grid of 500 by 500. 
-        grid = self.browser.find_element_by_id('world_grid')
-        
-
-
-        # .. and also sees a button that says "Spawn Solitary Blob on a 
-        # random spot", when it's pushed, the user sees a blob spawn on a 
-        # random spot on the map.
-        
-        # There is another button that reads "Evolve Blobs".
-        # This button is clicked, and all blob-units evolve in a random 
-        # direction.
-
-        # The user can also sees a "Let there be time" a button that starts
-        # the time and simulates the previously mentioned steps. 
-        
-        # The button is replaced with a button that says "Stop the time".
-        # This button is clicked, and the time is stopped.
-
-
-
-
-
-if __name__ == '__main__':
-    unittest.main()
+"""

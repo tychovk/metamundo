@@ -8,6 +8,10 @@ from . import cel_app
 import math
 import logging
 from celery import Task
+import json
+
+
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -18,35 +22,30 @@ class WorldGrid(Task):
         '''
         self.x_bounds = [0,500]
         self.y_bounds = [0,500]
-        self.coords = {x: {y: None for y in range(self.x_bounds[1])} 
+        self.world_coords = {x: {y: None for y in range(self.x_bounds[1])} 
                         for x in range(self.y_bounds[1])}
+        # self.world_coords = json.dumps(coords)
         self.day = 0
-
-
-
-class BlobManager:
-    def __init__(self, world_grid):
         self.blob_id = 1
-        self.day = 0
         self.blob_dict = {}
         
         
-    def coords_gen(self, world_grid):
-        x_bounds = world_grid.x_bounds
-        y_bounds = world_grid.y_bounds
+    def coords_gen(self):
+        x_bounds = self.x_bounds
+        y_bounds = self.y_bounds
         new_coords = [random.randrange(x_bounds[0], x_bounds[1]), 
                       random.randrange(y_bounds[0], y_bounds[1])]
         return new_coords
 
 
-    def spawn_blob(self, world_grid):
+    def spawn_blob(self):
         '''
         Spawns a new lone blob more than 200 steps away from other blobs.
         Returns True if blob was spawned
         Returns False if no blob was spawned
         '''
 
-        new_blob_coords = self.coords_gen(world_grid)
+        new_blob_coords = self.coords_gen(self.world_coords)
         new_blob_x = new_blob_coords[0]
         new_blob_y = new_blob_coords[1]
 
@@ -74,22 +73,28 @@ class BlobManager:
         return
 
         
-    def start(self, world_grid):
-        self.spawn_blob(world_grid)
+    def start(self):
+        self.spawn_blob()
         self.time_progression()
-        #spawn_blob(self, world_grid)
+        #spawn_blob(self)
 
 
 class Player:
-    def __init__(self, world_grid, name, x = None, y = None):
+    def __init__(self, name, x = None, y = None):
         self.name = name
         if x is None:
-            x_min = world_grid.x_bounds[0]
-            x_max = world_grid.x_bounds[1]
-            y_min = world_grid.y_bounds[0]
-            y_max = world_grid.y_bounds[1]
+            x_min = self.x_bounds[0]
+            x_max = self.x_bounds[1]
+            y_min = self.y_bounds[0]
+            y_max = self.y_bounds[1]
             self.x = random.randrange(x_min, x_max)
             self.y = random.randrange(y_min, y_max)
+
+
+
+
+
+
 
 
 """

@@ -1,0 +1,27 @@
+<!-- this would be included -->
+
+<html>
+  <head>
+    <title>Grid View</title>
+  </head>
+
+  <body>
+    <h1>Grid view</h1>
+    <form method="POST" action="/">
+        <input type="button" value="Start World" id="start_world"/>
+        {% csrf_token %}
+    </form>
+
+    {% if world == true %}
+
+        <div id="world_grid">
+            {{ world }}
+            {{ world.coords }}
+            {{ world.coords|safe }}
+
+    {% endif %}
+
+
+
+  </body>
+</html>
