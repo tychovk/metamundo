@@ -41,7 +41,7 @@ class BlobManager:
 
     def spawn_blob(self, world_grid):
         '''
-        Spawns a new lone blob more than 500 steps away from other blobs.
+        Spawns a new lone blob more than 200 steps away from other blobs.
         Returns True if blob was spawned
         Returns False if no blob was spawned
         '''
@@ -56,12 +56,8 @@ class BlobManager:
 
             distance = math.sqrt((new_blob_x - old_blob_x)**2 +
                                  (new_blob_y - old_blob_y)**2)
-            print (distance)                                        # TO BE REMOVED LATER
-            print (new_blob_coords, [old_blob_x,old_blob_y])        # TO BE REMOVED LATER
 
-            if distance < 200:
-                # logging.info('New blob would be too close to old blobs. ' \
-                #              'No new blob today!')
+            if distance <= 200:
                 return False
 
         self.blob_dict.update({self.blob_id: {'birthdate': self.day,
