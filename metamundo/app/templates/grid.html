@@ -7,17 +7,22 @@
 
   <body>
     <h1>Grid view</h1>
-    <form method="POST" action="/">
-        <input type="button" value="Start World" id="start_world"/>
+
+    {% if world == False %}
+    <form method="POST" action="/grid/new">
+        <input type="submit" value="Start World" id="start_world"/>
         {% csrf_token %}
     </form>
 
-    {% if world == true %}
 
+
+    {% elif world != False %}
+        testtest
         <div id="world_grid">
             {{ world }}
             {{ world.coords }}
-            {{ world.coords|safe }}
+            {{ world.world_coords|safe }}
+        </div>
 
     {% endif %}
 

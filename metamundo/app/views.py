@@ -8,7 +8,8 @@ def home_page(request):
 
 
 def control_panel(request):
-    return render(request, 'control_panel.html')
+    #return render(request, 'control_panel.html')
+    return redirect('/grid/new')
 
 
 def new_grid(request):
@@ -16,8 +17,8 @@ def new_grid(request):
         world_grid = WorldGrid()
         world_coords = json.dumps(world_grid.world_coords)
         world = World.objects.create(world_coords=world_coords)
-        return redirect('/grid/{}/'.format(world.id))
-    return render(request, 'grid.html')
+        return redirect('/grid/{}'.format(world.id))
+    return render(request, 'grid.html', {'world': False})
 
 
 
