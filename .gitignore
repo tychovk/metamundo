@@ -6,7 +6,6 @@
 *.rdb
 
 # virtual env folder
-/metamundo
 node_modules
 __pycache__
 *.pyc
