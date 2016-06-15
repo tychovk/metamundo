@@ -9,14 +9,15 @@
     <h1>Grid view</h1>
 
     {% if world == False %}
-    <form method="POST" action="/grid/new">
-        <input type="submit" value="Start World" id="start_world"/>
-        {% csrf_token %}
-    </form>
+      <form method="POST" action="/grid/new">
+          <input type="submit" value="Start World" id="start_world"/>
+          {% csrf_token %}
+      </form>
 
 
 
     {% elif world != False %}
+    
         testtest
         <div id="world_grid">
             {{ world }}
