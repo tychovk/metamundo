@@ -3,6 +3,20 @@
 <html>
   <head>
     <title>Grid View</title>
+
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/grid.css" rel="stylesheet">
+
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+
+
+
+ <link rel="stylesheet" type="text/css" href="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" />
+<script type="text/JavaScript" src="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraphcore.js"></script>
+
+
   </head>
 
   <body>
@@ -16,18 +30,77 @@
 
 
 
+  <div id='jxgbox' class='jxgbox' style='width:400px; height:400px;'></div>
+
+
+
+
+
     {% elif world != False %}
-    
+
         testtest
-        <div id="world_grid">
-            {{ world }}
-            {{ world.coords }}
-            {{ world.world_coords|safe }}
-        </div>
+        <div id="world_grid"></div>
+
+
+
+
+
+
 
     {% endif %}
 
 
 
   </body>
+
+
+  <script type="text/JavaScript">
+      $( '#world_grid' ).click( 
+        function(e) {
+          var coordX = ( 
+            e.pageX - $( this ).offset().left - ( $( this ).width()  * 0.5 ) 
+            );
+
+          var coordY = -( 
+            e.pageY - $( this ).offset().top  - ( $( this ).height() * 0.5 ) 
+            );
+            
+          alert( coordX.toFixed(1) + ' , ' + coordY.toFixed(1) );
+        });
+  </script>
+
+  <!-- http://jsxgraph.uni-bayreuth.de/wiki/index.php/Howto_include_JSXGraph_into_web_pages -->
+  <script type="text/JavaScript">
+  var getMouseCoords = function(e, i) {
+        var cPos = board.getCoordsTopLeftCorner(e, i),
+            absPos = JXG.getPosition(e, i),
+            dx = absPos[0]-cPos[0],
+            dy = absPos[1]-cPos[1];
+ 
+        return new JXG.Coords(JXG.COORDS_BY_SCREEN, [dx, dy], board);
+    },
+    down = function(e) {
+        var canCreate = true, i, coords, el;
+ 
+        if (e[JXG.touchProperty]) {
+            // index of the finger that is used to extract the coordinates
+            i = 0;
+        }
+        coords = getMouseCoords(e, i);
+ 
+        for (el in board.objects) {
+            if(JXG.isPoint(board.objects[el]) && board.objects[el].hasPoint(coords.scrCoords[1], coords.scrCoords[2])) {
+                canCreate = false;
+                break;
+            }
+        }
+ 
+        if (canCreate) {
+            board.create('point', [coords.usrCoords[1], coords.usrCoords[2]]);
+        }
+    },
+    board = JXG.JSXGraph.initBoard('jxgbox', {boundingbox: [-5,5,5,-5], axis: true});
+ 
+    board.on('down', down);
+    </script>
 </html>

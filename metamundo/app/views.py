@@ -25,3 +25,5 @@ def new_grid(request):
 def view_grid(request, world_id):
     world = World.objects.get(id=world_id)
     return render(request, 'grid.html', {'world': world})
+
+    

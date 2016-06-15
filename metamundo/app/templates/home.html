@@ -1,10 +1,47 @@
-<html>
-  <head>
-    <title>Metamundo</title>
-  </head>
+{% extends 'base.html' %}
 
-  <body>
-    <h1>Your to-do list</h1>
 
-  </body>
-</html>
+{% block body %}
+<div class ="container">
+<div class="col-md-10 col-md-offset-1 jumbotron">
+<div class="text-center">
+
+<h1>Welcome to Metamundo!</h1>
+
+<p class="lead">In this 2D world, there are a lot of trivial things that are of no importance. And, there are... Blobs.</p>
+
+<h2>Blobs</h2>
+
+Blobs are jelly-like consistencies that appear here and there. They are not necessarily everywhere, but definitely present. They grow in a seemingly random pattern. What is the meaning of this?
+
+<h2>The App</h2>
+
+This will be - as it is a work in progress - a 2D simulation where so called 'blobs' grow on a grid, relatively far apart from each other. Blobs age, and thereby increase their chance of expanding.
+
+<br>
+Plans are to:
+<ul>
+    <li>
+    Allow players, who spawn on a random spot on the map, to walk around and interact with the blobs.
+    </li>
+    <li>
+        Have blobs get different characteristics, either spontaneously, or by interaction with players. Characteristics can be: colour, stiffness, procreative enthusiasm, defiance or adherence towards players/their own blob-mind, hostility, and so forth.
+    </li>
+    <li>
+        Have the map expand automatically as players reach the periphery (meaning blobs can spawn there too, but players as well)
+    </li>
+    <li>
+        Have a visual representation for this, in a web environment as well as a smartphone app
+    <li>
+        Have links with apps that track real-life (health) performance, e.g. steps walked, to increase player's speed / energy / blob carrying capacity (temporarily).
+    </li>
+</ul>
+
+
+</div>
+</div>
+</div>
+
+</body>
+
+{% endblock %}

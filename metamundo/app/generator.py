@@ -22,9 +22,12 @@ class WorldGrid(Task):
         '''
         self.x_bounds = [0,500]
         self.y_bounds = [0,500]
-        self.world_coords = {x: {y: None for y in range(self.x_bounds[1])} 
+        self.grid_coords = [[x, y] for x in range(self.x_bounds[1]) 
+                                    for y in range(self.y_bounds[1])]
+
+        self.coords = {x: {y: None for y in range(self.x_bounds[1])} 
                         for x in range(self.y_bounds[1])}
-        # self.world_coords = json.dumps(coords)
+        self.world_coords = json.dumps(self.coords)
         self.day = 0
         self.blob_id = 1
         self.blob_dict = {}
