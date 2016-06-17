@@ -47,6 +47,35 @@ class ControlPanelTest(TestCase):
         self.assertEqual(json_coords, saved_world_coords)
 
 
+    def test_uses_world_view_template(self):
+        world = World.objects.create()
+        response = self.client.get('/control_panel/world/{}/'.format(world.id))
+        self.assertTemplateUsed(response, 'control_panel.html')
+
+
+    def test_passes_correct_list_to_template(self):
+        correct_world = World.objects.create()
+        response = self.client.get('/control_panel/world/{}/'.format(correct_world.id))
+
+        self.assertEqual(response.context['world'], correct_world)
+
+
+    def test_displays_only_blobs_for_that_world(self):
+        correct_world = World.objects.create()
+        Blob.objects.create(blob=[1,2], world=correct_world)
+        Blob.objects.create(blob=[4,5], world=correct_world)
+
+        other_world = World.objects.create()
+        Blob.objects.create(blob=[5,2], world=other_world)
+        Blob.objects.create(blob=[2,5], world=other_world)
+
+        response = self.client.get('/control_panel/world/{}/'.format(correct_world.id))
+
+        self.assertContains(response, [1,2])
+        self.assertContains(response, [4,5])
+        self.assertNotContains(response, [5,2])
+        self.assertNotContains(response, [2,5])
+
 
 class NewWorldTest(TestCase):
 
@@ -57,8 +86,8 @@ class NewWorldTest(TestCase):
 
 
     def test_saving_a_new_world_creation_from_POST_request(self):
-        x_bounds = [0,500]
-        y_bounds = [0,500]
+        x_bounds = [0,50]
+        y_bounds = [0,50]
         coords = {x: {y: None for y in range(x_bounds[1])} 
                         for x in range(y_bounds[1])}
         json_coords = json.dumps(coords)        
@@ -83,8 +112,8 @@ class NewWorldTest(TestCase):
         world_2.world_coords = json.dumps(WorldGrid().world_coords)
         world_2.save()
 
-        x_bounds = [1,500]
-        y_bounds = [1,500]
+        x_bounds = [0,50]
+        y_bounds = [0,50]
         coords = {x: {y: None for y in range(x_bounds[1])} 
                         for x in range(y_bounds[1])}
         json_coords = json.dumps(coords)        
