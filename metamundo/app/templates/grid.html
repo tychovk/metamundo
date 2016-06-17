@@ -67,16 +67,19 @@
 
 <!-- grid1_alt -->
 <script type="text/JavaScript">
+var numRows = 20;
+var numCols = 20;
+
 
 var lastClicked;
-var grid = clickableGrid(2, 2, 5, function(el,row,col,i){
+var grid = clickableGrid(numRows, numCols, 5, function(el,row,col,i){
     console.log("You clicked on element:",el);
     console.log("You clicked on row:",row);
     console.log("You clicked on col:",col);
     console.log("You clicked on item #:",i);
 
-    el.className += ' clicked';
-    if (lastClicked) lastClicked.className='col';
+    el.classList.add('clicked');
+    if (lastClicked) lastClicked.classList.remove('clicked');
     if (lastClicked == el) lastClicked = null;
     else lastClicked = el; 
 });

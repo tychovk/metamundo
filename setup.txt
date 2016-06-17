@@ -11,3 +11,12 @@ celery worker -A app.cel_app -I config -c 3 --loglevel=info
 And for the beat, also in a terminal window:
 
 celery beat -A app.cel_app
+
+
+Some resources for JS:
+http://stackoverflow.com/questions/9140101/creating-a-clickable-grid-in-a-web-browser
+
+http://jsfiddle.net/CVVE6/11/
+
+http://jsfiddle.net/6qkdP/2/
+
