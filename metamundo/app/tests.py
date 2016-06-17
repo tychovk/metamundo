@@ -8,7 +8,6 @@ from app.views import home_page
 from app.views import control_panel
 from app.models import World
 
-
 import logging
 import math
 import json
@@ -26,8 +25,26 @@ class ControlPanelTest(TestCase):
     def test_control_panel_returns_correct_html(self):
         request = HttpRequest()
         response = control_panel(request)
-        expected_html = render_to_string('control_panel.html')
+        expected_html = render_to_string('control_panel.html', request=request)
         self.assertEqual(response.content.decode(), expected_html)
+
+
+    def test_new_world_generated_from_POST_request(self):
+        x_bounds = [0,50]
+        y_bounds = [0,50]
+        coords = {x: {y: None for y in range(x_bounds[1])} 
+                        for x in range(y_bounds[1])}
+        json_coords = json.dumps(coords)        
+
+        self.client.post(
+            '/control_panel',
+        )
+
+        self.assertEqual(World.objects.count(), 1)
+
+        saved_world = World.objects.first()
+        saved_world_coords = json.loads(saved_world.world_coords)
+        self.assertEqual(json_coords, saved_world_coords)
 
 
 
@@ -48,13 +65,12 @@ class NewWorldTest(TestCase):
 
         self.client.post(
             '/grid/new',
-
         )
 
         self.assertEqual(World.objects.count(), 1)
 
         saved_world = World.objects.first()
-        saved_world_coords = saved_world.world_coords
+        saved_world_coords = json.loads(saved_world.world_coords)
         self.assertEqual(json_coords, saved_world_coords)
 
 
@@ -78,8 +94,8 @@ class NewWorldTest(TestCase):
 
         first_saved_world = saved_worlds[0]
         second_saved_world = saved_worlds[1]
-        self.assertEqual(json_coords, first_saved_world.world_coords)
-        self.assertEqual(json_coords, second_saved_world.world_coords)
+        self.assertEqual(json_coords, json.loads(first_saved_world.world_coords))
+        self.assertEqual(json_coords, json.loads(second_saved_world.world_coords))
         
 
 

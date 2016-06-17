@@ -40,14 +40,35 @@ class MetamundoControler(StaticLiveServerTestCase):
         # There is no grid yet
         self.assertFalse(self.is_element_present(By.ID, "world_grid"))
 
-        # We get to push a button to start the world
+        # We push a button to start the world
         start_world_box = self.browser.find_element_by_id('start_world')
         start_world_box.send_keys(Keys.ENTER)
 
-        # Now the page contains the coordinates of a grid that is empty
-        self.assertTrue(self.is_element_present(By.ID, "world_grid"))
-        world_grid = self.browser.find_element_by_id('world_grid')
+        # Now the page contains a grid
+        self.assertTrue(self.is_element_present(By.ID, "world_grid_1"))
 
+        # Oops, we accidentally pressed the button twice
+        start_world_box = self.browser.find_element_by_id('start_world')
+        start_world_box.send_keys(Keys.ENTER)
+
+        # Now the page contains a grid again
+        self.assertTrue(self.is_element_present(By.ID, "world_grid_2"))
+
+        # There's a dropdown menu too where we can select an already existing
+        # world...
+        self.assertTrue(self.is_element_present(By.ID, "select_world"))
+        
+        #  We click & select the first world we created.
+        select_world = self.browser.find_element_by_id('select_world_1')
+        select_world.click()
+        
+        # After we've created/selected a world, we see three new buttons:
+        # - Spwn blob
+        # - Start simulation
+        # - Add blob (different colour, which stays activated until esc or the
+        #   right-mouse button is clicked) to click-add blobs
+        
+        self.fail('Finish writing tests!')
 
         # It has a button in the midde of the grid that reads 
         #   "And so it begins..."
@@ -64,7 +85,7 @@ class MetamundoControler(StaticLiveServerTestCase):
 
 
 
-        self.fail('Finish writing tests!')
+        
 
 
         # The user sees a grid of 500 by 500. 

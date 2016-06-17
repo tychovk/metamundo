@@ -22,13 +22,17 @@
   </head>
 
   <body>
-    <h1>Grid view</h1>
+    <h1>Control Panel</h1>
+
 
     {% if world == False %}
       <form method="POST" action="/grid/new">
           <input type="submit" value="Start World" id="start_world"/>
           {% csrf_token %}
       </form>
+
+
+
 
 
       <div id='grid_container'></div>
@@ -63,12 +67,10 @@
 
 -->
 
-
-
 <!-- grid1_alt -->
 <script type="text/JavaScript">
-var numRows = 20;
-var numCols = 20;
+var numRows = 50;
+var numCols = 50;
 
 
 var lastClicked;
@@ -91,10 +93,10 @@ function clickableGrid( rows, cols, size, callback ){
     var grid = document.createElement('div');
     grid.className = 'grid';
     for (var r=0;r<rows;++r){
-        var div_tr = grid.appendChild(document.createElement('div'));
-        div_tr.className="row";
+        var row = grid.appendChild(document.createElement('div'));
+        row.className="row";
         for (var c=0;c<cols;++c){
-            var cell = div_tr.appendChild(document.createElement('div'));
+            var cell = row.appendChild(document.createElement('div'));
             cell.className="col";
             //cell.innerHTML = '';
             //cell.innerHTML = ++i;
@@ -181,27 +183,6 @@ grid_container.appendChild(grid);
 
 </script>
 <!-- end grid2 -->
-
-
-
-
-
-  <script type="text/JavaScript">
-      $( '#world_grid' ).click( 
-        function(e) {
-          var coordX = ( 
-            e.pageX - $( this ).offset().left - ( $( this ).width()  * 0.5 ) 
-            );
-
-          var coordY = -( 
-            e.pageY - $( this ).offset().top  - ( $( this ).height() * 0.5 ) 
-            );
-            
-          alert( coordX.toFixed(1) + ' , ' + coordY.toFixed(1) );
-        });
-  </script>
-
-
 
 
 

@@ -20,8 +20,8 @@ class WorldGrid(Task):
         '''
         The only information the grid has, is if it's occupied or not.
         '''
-        self.x_bounds = [0,500]
-        self.y_bounds = [0,500]
+        self.x_bounds = [0,50]
+        self.y_bounds = [0,50]
         self.grid_coords = [[x, y] for x in range(self.x_bounds[1]) 
                                     for y in range(self.y_bounds[1])]
 
