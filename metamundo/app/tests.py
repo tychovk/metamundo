@@ -28,23 +28,45 @@ class ControlPanelTest(TestCase):
         self.assertEqual(response.content.decode(), expected_html)
 
 
-    def test_new_world_generated_from_POST_request(self):
-        x_bounds = [0,50]
-        y_bounds = [0,50]
-        coords = {x: {y: None for y in range(x_bounds[1])} 
-                        for x in range(y_bounds[1])}
-        json_coords = json.dumps(coords)        
-
+    def test_saving_new_world_from_POST_request(self):
         self.client.post(
             '/world/new',
         )
 
         self.assertEqual(World.objects.count(), 1)
 
-        saved_world = World.objects.first()
-        saved_world_coords = saved_world.world_coords
 
-        self.assertEqual(json_coords, saved_world_coords)
+    def test_saving_blob_from_POST_request(self):
+        world = World.objects.create()
+
+        self.client.post(
+            '/world/{}/add_blob'.format(world.id),
+            data={'new_blob': [1,2]}
+        )
+        
+        self.assertEqual(Blob.objects.count(), 1)
+
+        saved_blob = Blob.objects.first()
+
+        self.assertEqual(saved_blob.x, 1)
+        self.assertEqual(saved_blob.y, 2)
+        self.assertEqual(saved_blob.world, world)
+
+
+    def test_redirects_to_world_view(self):
+        world = World.objects.create()
+
+        response = self.client.post(
+            '/world/{}/add_blob'.format(world.id),
+            data={'new_blob': [1,2]}
+        )
+
+        self.assertRedirects(response, '/world/{}/'.format(world.id))
+
+
+
+
+
 
 
     # Doesn't seem to work with templates that receive JSON?
@@ -55,21 +77,20 @@ class ControlPanelTest(TestCase):
     #    self.assertTemplateUsed(response, 'control_panel.html')
 
 
-    def test_passes_correct_world_coords_to_template(self):
-        world_coords = WorldGrid().world_coords
-
-        correct_world = World.objects.create(world_coords=world_coords)
-        world_coords = None
-        if hasattr(correct_world, 'world_coords'):
-            world_coords = json.loads(correct_world.world_coords)
-        response = self.client.get('/world/{}/'.format(correct_world.id))
-
-        self.assertEqual(response.context['world_coords'], world_coords)
+#    def test_passes_correct_world_coords_to_template(self):
+#        world_coords = WorldGrid().world_coords
+#
+#        correct_world = World.objects.create(world_coords=world_coords)
+#        world_coords = None
+#        if hasattr(correct_world, 'world_coords'):
+#            world_coords = json.loads(correct_world.world_coords)
+#        response = self.client.get('/world/{}/'.format(correct_world.id))
+#
+#        self.assertEqual(response.context['world_coords'], world_coords)
 
 
     def test_saving_and_retrieving_blob_coords(self):
-        world_coords = WorldGrid().world_coords
-        world_ = World.objects.create(world_coords=world_coords)
+        world_ = World.objects.create()
         world_.save()
 
         first_blob = Blob()
@@ -119,14 +140,12 @@ class ControlPanelTest(TestCase):
 
 
     def test_displays_only_blobs_for_that_world(self):
-        world_coords = WorldGrid().world_coords
-
-        correct_world = World.objects.create(world_coords=world_coords)
+        correct_world = World.objects.create()
 
         Blob.objects.create(x=1, y=2, world=correct_world)
         Blob.objects.create(x=3, y=4, world=correct_world)
 
-        other_world = World.objects.create(world_coords=world_coords)
+        other_world = World.objects.create()
         Blob.objects.create(x=5, y=6, world=other_world)
         Blob.objects.create(x=7, y=8, world=other_world)
 
@@ -152,47 +171,37 @@ class NewWorldTest(TestCase):
         self.assertTemplateUsed(response, 'grid.html')
 
 
-    def test_saving_a_new_world_creation_from_POST_request(self):
-        x_bounds = [0,50]
-        y_bounds = [0,50]
-        coords = {x: {y: None for y in range(x_bounds[1])} 
-                        for x in range(y_bounds[1])}
-        json_coords = json.dumps(coords)        
-
+    def test_saving_new_world_from_POST_request(self):
         self.client.post(
-            '/grid/new',
+            '/world/new',
         )
 
         self.assertEqual(World.objects.count(), 1)
 
-        saved_world = World.objects.first()
-        saved_world_coords = saved_world.world_coords
-        self.assertEqual(json_coords, saved_world_coords)
-
 
     def test_saving_and_retrieving_worlds(self):
-        world_1 = World()
-        world_1.world_coords = json.dumps(WorldGrid().world_coords)
-        world_1.save()
-
-        world_2 = World()
-        world_2.world_coords = json.dumps(WorldGrid().world_coords)
-        world_2.save()
-
         x_bounds = [0,50]
         y_bounds = [0,50]
         coords = {x: {y: None for y in range(x_bounds[1])} 
                         for x in range(y_bounds[1])}
-        json_coords = json.dumps(coords)        
+        json_coords = json.dumps(coords)    
+
+        world_1 = World()
+        world_1.world_coords = json.dumps(coords)
+        world_1.save()
+
+        world_2 = World()
+        world_2.world_coords = json.dumps(coords)
+        world_2.save()
 
         saved_worlds = World.objects.all()
         self.assertEqual(saved_worlds.count(), 2)
 
         first_saved_world = saved_worlds[0]
         second_saved_world = saved_worlds[1]
-        self.assertEqual(json_coords, json.loads(first_saved_world.world_coords))
-        self.assertEqual(json_coords, json.loads(second_saved_world.world_coords))
-        
+        self.assertEqual(json_coords, first_saved_world.world_coords)
+        self.assertEqual(json_coords, second_saved_world.world_coords)
+    
 
 
 

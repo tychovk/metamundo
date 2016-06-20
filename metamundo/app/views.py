@@ -12,22 +12,41 @@ def home_page(request):
 
 
 def new_world(request):
-    world_grid = WorldGrid()
-    world_coords = world_grid.world_coords
-    world = World.objects.create(world_coords=world_coords)
+    world = World.objects.create()
     return redirect('/world/{}/'.format(world.id))
 
 
 def view_world(request, world_id):
     world = World.objects.get(id=world_id)
-    world_coords = None
-    if hasattr(world, 'world_coords'):
-        world_coords = json.loads(world.world_coords) # what is going on here
+#    if hasattr(world, 'world_coords'):
+#        world_coords = json.loads(world.world_coords) # what is going on here
     blobs = Blob.objects.all().filter(world=world)
     return render(request, 'control_panel.html', 
                 { 'world': world,
-                'world_coords': world_coords,
                 'blobs': blobs})
+
+
+def add_blob(request, world_id):
+    world = World.objects.get(id=world_id)
+    if request.method == 'POST':
+        new_blob = request.POST.getlist('new_blob')
+        '''
+        # future use
+        blobs_query = [
+                Blob(
+                    x=new_blob[0],
+                    y=new_blob[1],
+                    world=world,
+                )
+                for new_blob in new_blobs
+        ]
+    
+        Blob.objects.bulk_create(blobs_query)
+        '''
+        x = int(new_blob[0])
+        y = int(new_blob[1])
+        Blob.objects.create(x=x, y=y, world=world)
+    return redirect('/world/{}/'.format(world.id))
 
 
 def control_panel(request):
@@ -36,9 +55,7 @@ def control_panel(request):
 
 def new_grid(request):
     if request.method == 'POST':    
-        world_grid = WorldGrid()
-        world_coords = world_grid.world_coords
-        world = World.objects.create(world_coords=world_coords)
+        world = World.objects.create()
         return redirect('/grid/{}'.format(world.id))
     return render(request, 'grid.html', {'world': False})
 
