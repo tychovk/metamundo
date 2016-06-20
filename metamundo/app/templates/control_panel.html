@@ -28,10 +28,6 @@
           {% csrf_token %}
       </form>
 
-
-
-
-
       <div id='grid_container'></div>
 
       <!-- <div id='grid_container2'></div> -->
@@ -40,17 +36,20 @@
 
 
     {% elif world_coords %}
-        
 
+      {{ world_coords }}
+        
         {% for x, y_coords in world_coords.items %}
           {% for y, value in y_coords.items %}
             <p>({{ x }}; {{ y }})</p>
           {% endfor %}
         {% endfor %}
 
-        {% if blob_coords %}
-            {{ blob_coords }}
+
+        {% if blobs %}
+            {{ blobs }}
         {% endif %}
+
         <div id="world_grid_{{ world.id }}"></div>
 
     {% endif %}
@@ -66,6 +65,7 @@ Scalability of grid2
 Zoom of grid 3
 
 -->
+
 
 <!-- grid1_alt -->
 <script type="text/JavaScript">

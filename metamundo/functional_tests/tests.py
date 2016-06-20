@@ -51,6 +51,11 @@ class MetamundoControler(StaticLiveServerTestCase):
         start_world_box = self.browser.find_element_by_id('start_world')
         start_world_box.send_keys(Keys.ENTER)
 
+        # A pop-up message appears, asking if we really want to create a new
+        # world.
+
+
+
         # Now the page contains a grid again
         self.assertTrue(self.is_element_present(By.ID, "world_grid_2"))
 
@@ -68,6 +73,8 @@ class MetamundoControler(StaticLiveServerTestCase):
         # - Add blob (different colour, which stays activated until esc or the
         #   right-mouse button is clicked) to click-add blobs
         
+        
+
         self.fail('Finish writing tests!')
 
         # It has a button in the midde of the grid that reads 

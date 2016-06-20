@@ -4,7 +4,8 @@ class World(models.Model):
     world_coords = models.TextField(max_length=10000, default='')
 
 class Blob(models.Model):
-    blob_coords = models.TextField(max_length=10000, default='')
+    x = models.IntegerField(default=0)
+    y = models.IntegerField(default=0)
     world = models.ForeignKey(World, default=None)
 
 
