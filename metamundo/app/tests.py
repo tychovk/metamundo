@@ -4,9 +4,8 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 
 from app.generator import WorldGrid
-from app.views import home_page
-from app.views import control_panel
-from app.models import World
+from app.views import home_page, control_panel, new_world, view_world
+from app.models import World, Blob
 
 import logging
 import math
@@ -18,8 +17,8 @@ logging.basicConfig(level=logging.INFO)
 class ControlPanelTest(TestCase):
 
     def test_control_panel_url_resolves(self):
-        found = resolve('/control_panel')
-        self.assertEqual(found.func, control_panel)
+        found = resolve('/world/new')
+        self.assertEqual(found.func, new_world)
 
 
     def test_control_panel_returns_correct_html(self):
@@ -37,39 +36,42 @@ class ControlPanelTest(TestCase):
         json_coords = json.dumps(coords)        
 
         self.client.post(
-            '/control_panel',
+            '/world/new',
         )
 
         self.assertEqual(World.objects.count(), 1)
 
         saved_world = World.objects.first()
-        saved_world_coords = json.loads(saved_world.world_coords)
+        saved_world_coords = saved_world.world_coords
         self.assertEqual(json_coords, saved_world_coords)
 
 
     def test_uses_world_view_template(self):
         world = World.objects.create()
-        response = self.client.get('/control_panel/world/{}/'.format(world.id))
+        response = self.client.get('/world/{}/'.format(world.id))
         self.assertTemplateUsed(response, 'control_panel.html')
 
 
     def test_passes_correct_list_to_template(self):
         correct_world = World.objects.create()
-        response = self.client.get('/control_panel/world/{}/'.format(correct_world.id))
+        response = self.client.get('/world/{}/'.format(correct_world.id))
 
         self.assertEqual(response.context['world'], correct_world)
 
 
     def test_displays_only_blobs_for_that_world(self):
-        correct_world = World.objects.create()
-        Blob.objects.create(blob=[1,2], world=correct_world)
-        Blob.objects.create(blob=[4,5], world=correct_world)
+        world_coords = WorldGrid().world_coords
 
-        other_world = World.objects.create()
-        Blob.objects.create(blob=[5,2], world=other_world)
-        Blob.objects.create(blob=[2,5], world=other_world)
+        correct_world = World.objects.create(world_coords=world_coords)
 
-        response = self.client.get('/control_panel/world/{}/'.format(correct_world.id))
+        Blob.objects.create(blob_coords=[1,2], world=correct_world)
+        Blob.objects.create(blob_coords=[4,5], world=correct_world)
+
+        other_world = World.objects.create(world_coords=world_coords)
+        Blob.objects.create(blob_coords=[5,2], world=other_world)
+        Blob.objects.create(blob_coords=[2,5], world=other_world)
+
+        response = self.client.get('/world/{}/'.format(correct_world.id))
 
         self.assertContains(response, [1,2])
         self.assertContains(response, [4,5])
@@ -99,7 +101,7 @@ class NewWorldTest(TestCase):
         self.assertEqual(World.objects.count(), 1)
 
         saved_world = World.objects.first()
-        saved_world_coords = json.loads(saved_world.world_coords)
+        saved_world_coords = saved_world.world_coords
         self.assertEqual(json_coords, saved_world_coords)
 
 
@@ -132,4 +134,3 @@ class NewWorldTest(TestCase):
 
 class AddBlobTest(TestCase):
     pass
-

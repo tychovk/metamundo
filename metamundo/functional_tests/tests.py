@@ -32,7 +32,7 @@ class MetamundoControler(StaticLiveServerTestCase):
     def test_control_functions(self):
 
         # Management gets to the control panel:
-        self.browser.get("http://localhost:8000/control_panel")
+        self.browser.get("http://localhost:8000")
 
         # We see it in the title
         # self.assertIn('Metamundo Control Panel', self.browser.title)

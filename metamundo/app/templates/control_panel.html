@@ -22,8 +22,8 @@
     <h1>Control Panel</h1>
 
 
-    {% if not world %}
-      <form method="POST" action="/grid/new">
+    {% if not world_coords %}
+      <form method="POST" action="/world/new">
           <input type="submit" value="Start World" id="start_world"/>
           {% csrf_token %}
       </form>
@@ -39,10 +39,19 @@
       <!-- <div id='jxgbox' class='jxgbox' style='width:400px; height:400px;'></div> -->
 
 
-    {% elif world != False %}
+    {% elif world_coords %}
+        
 
-        testtest
-        <div id="world_grid"></div>
+        {% for x, y_coords in world_coords.items %}
+          {% for y, value in y_coords.items %}
+            <p>({{ x }}; {{ y }})</p>
+          {% endfor %}
+        {% endfor %}
+
+        {% if blob_coords %}
+            {{ blob_coords }}
+        {% endif %}
+        <div id="world_grid_{{ world.id }}"></div>
 
     {% endif %}
 

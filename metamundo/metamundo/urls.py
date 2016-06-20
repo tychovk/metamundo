@@ -21,7 +21,8 @@ from app import views
 
 urlpatterns = [
     url(r'^$', views.home_page, name='home'),
-    url(r'^control_panel$', views.control_panel, name='control_panel'),
+    url(r'^world/new$', views.new_world, name='new_world'),
+    url(r'^world/(\d+)/$', views.view_world, name='view_world'),
     url(r'^grid/(\d+)/$', views.view_grid, name='view_grid'),
     url(r'^grid/new$', views.new_grid, name='new_grid'),
     #url(r'^admin/', admin.site.urls),
