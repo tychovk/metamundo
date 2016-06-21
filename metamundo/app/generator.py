@@ -9,7 +9,7 @@ import math
 import logging
 from celery import Task
 import json
-
+from app.models import World, Blob 
 
 
 
@@ -32,41 +32,7 @@ class WorldGrid(Task):
         self.blob_id = 1
         self.blob_dict = {}
         
-        
-    def coords_gen(self):
-        x_bounds = self.x_bounds
-        y_bounds = self.y_bounds
-        new_coords = [random.randrange(x_bounds[0], x_bounds[1]), 
-                      random.randrange(y_bounds[0], y_bounds[1])]
-        return new_coords
-
-
-    def spawn_blob(self):
-        '''
-        Spawns a new lone blob more than 200 steps away from other blobs.
-        Returns True if blob was spawned
-        Returns False if no blob was spawned
-        '''
-
-        new_blob_coords = self.coords_gen(self.world_coords)
-        new_blob_x = new_blob_coords[0]
-        new_blob_y = new_blob_coords[1]
-
-        for blob in self.blob_dict:
-            old_blob_x = self.blob_dict[blob]['coords'][0]
-            old_blob_y = self.blob_dict[blob]['coords'][1]
-
-            distance = math.sqrt((new_blob_x - old_blob_x)**2 +
-                                 (new_blob_y - old_blob_y)**2)
-
-            if distance <= 200:
-                return False
-
-        self.blob_dict.update({self.blob_id: {'birthdate': self.day,
-                                                  'coords': new_blob_coords}})
-        self.blob_id += 1
-
-        return True
+  
 
 
    #@cel_app.task(name="time_progression")
@@ -94,9 +60,46 @@ class Player:
             self.y = random.randrange(y_min, y_max)
 
 
+class BlobGenerator:
+    def __init__(self, world):
+        self.x_lower_bound = world.x_lower_bound
+        self.x_upper_bound = world.x_upper_bound
+        self.y_lower_bound = world.y_lower_bound
+        self.y_upper_bound = world.y_upper_bound
+        self.blob_coords = tuple((blob.x, blob.y) for blob in Blob.objects.all().filter(world=world))
 
 
+    def coords_gen(self, x=None, y=None):
+        new_coords = [random.randrange(self.x_lower_bound, self.x_upper_bound), 
+                      random.randrange(self.y_lower_bound, self.y_upper_bound)]
+        return new_coords
 
+
+    def spawn_blob(self, new_blob_x=None, new_blob_y=None, override=False):
+        '''
+        Spawns a new lone blob more than 200 steps away from other blobs.
+        Returns True if blob was spawned
+        Returns False if no blob was spawned
+        '''
+
+        if new_blob_x is None or new_blob_y is None:
+            new_blob_coords = self.coords_gen()
+            new_blob_x = new_blob_coords[0]
+            new_blob_y = new_blob_coords[1]
+
+        for old_blob in self.blob_coords:
+            old_blob_x = old_blob[0]
+            old_blob_y = old_blob[1]
+
+            distance = math.sqrt((new_blob_x - old_blob_x)**2 +
+                                 (new_blob_y - old_blob_y)**2)
+
+            if distance <= 200 and override is False:
+                return False
+
+        return (new_blob_x, new_blob_y)
+
+# generate blob, add birthday, etc
 
 
 

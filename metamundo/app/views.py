@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from app.models import World, Blob
-from app.generator import WorldGrid
+from app.generator import WorldGrid, BlobGenerator
 import json
 import logging
 
@@ -23,13 +23,14 @@ def view_world(request, world_id):
     blobs = Blob.objects.all().filter(world=world)
     return render(request, 'control_panel.html', 
                 { 'world': world,
-                'blobs': blobs})
+                  'blobs': blobs})
 
 
 def add_blob(request, world_id):
     world = World.objects.get(id=world_id)
     if request.method == 'POST':
-        new_blob = request.POST.getlist('new_blob')
+        new_blob = request.POST.getlist('new_blob_coords')
+
         '''
         # future use
         blobs_query = [
@@ -43,9 +44,23 @@ def add_blob(request, world_id):
     
         Blob.objects.bulk_create(blobs_query)
         '''
-        x = int(new_blob[0])
-        y = int(new_blob[1])
-        Blob.objects.create(x=x, y=y, world=world)
+        x = None
+        y = None
+        if new_blob:
+            x = int(new_blob[0])
+            y = int(new_blob[1])
+
+        blob_gen = BlobGenerator(world)
+        spawn_blob = blob_gen.spawn_blob(new_blob_x=x, new_blob_y=y)
+        if spawn_blob:
+            x_generated = spawn_blob[0]
+            y_generated = spawn_blob[1]
+            Blob.objects.create(x=x_generated, y=y_generated, world=world)
+            world.status_message = "New blob was spawned at: {x}, {y}" \
+                                    .format(x=x_generated, y=y_generated)
+        else:
+            world.status_message = "The would-be-blob was too close to other blobs."
+            world.save()
     return redirect('/world/{}/'.format(world.id))
 
 

@@ -31,7 +31,7 @@ class MetamundoControler(StaticLiveServerTestCase):
 
     def test_control_functions(self):
 
-        # Management gets to the control panel:
+        # A visitor gets to the main page:
         self.browser.get("http://localhost:8000")
 
         # We see it in the title
@@ -40,12 +40,14 @@ class MetamundoControler(StaticLiveServerTestCase):
         # There is no grid yet
         self.assertFalse(self.is_element_present(By.ID, "world_grid"))
 
+        # There is an explanation of the website with a "start_world" button
         # We push a button to start the world
         start_world_box = self.browser.find_element_by_id('start_world')
         start_world_box.send_keys(Keys.ENTER)
 
         # Now the page contains a grid
-        self.assertTrue(self.is_element_present(By.ID, "world_grid_1"))
+        self.assertTrue(self.is_element_present(By.ID, "world_grid"))
+        first_world = self.browser.current_url
 
         # Oops, we accidentally pressed the button twice
         start_world_box = self.browser.find_element_by_id('start_world')
@@ -57,7 +59,41 @@ class MetamundoControler(StaticLiveServerTestCase):
 
 
         # Now the page contains a grid again
-        self.assertTrue(self.is_element_present(By.ID, "world_grid_2"))
+        self.assertTrue(self.is_element_present(By.ID, "world_grid"))
+        second_world = self.browser.current_url
+
+        # The first world we created is not the same as the second one
+        self.assertNotEqual(first_world, second_world)
+
+        # After we've created/selected a world, we see three new buttons:
+        # - Spawn blob (with text box for choosing coords)
+        self.assertTrue(self.is_element_present(By.ID, "spawn_blob"))
+        self.assertTrue(self.is_element_present(By.ID, "new_blob_coords"))
+        
+        # - Start simulation
+        self.assertTrue(self.is_element_present(By.ID, "start_simulation"))
+
+        # - Add blob (different colour, which stays activated until esc or the
+        #   right-mouse button is clicked) to click-add blobs
+        self.assertTrue(self.is_element_present(By.ID, "add_blob_at"))
+
+        ## Spawn Blob
+        # We press the "Spawn Blob" button...
+        spawn_blob_box = self.browser.find_element_by_id("spawn_blob")
+        spawn_blob_box.send_keys(Keys.ENTER)
+
+        # A status box shows tells us where the blob was placed.
+        status_box = self.browser.find_element_by_id("status_box")
+        self.assertIn("New blob was spawned at:", status_box.text)
+        new_blob_coords = [int(s) for s in re.findall(r'[-+]?\d+', status_box)]
+        self.assertTrue(len(new_blob_coords), 2)
+
+        # We see that box in the grid now green
+
+
+        # If no (random) blob could be spawned (due to rules), a message 
+        # makes clear that it can't happen.
+
 
         # There's a dropdown menu too where we can select an already existing
         # world...
@@ -67,11 +103,7 @@ class MetamundoControler(StaticLiveServerTestCase):
         select_world = self.browser.find_element_by_id('select_world_1')
         select_world.click()
         
-        # After we've created/selected a world, we see three new buttons:
-        # - Spwn blob
-        # - Start simulation
-        # - Add blob (different colour, which stays activated until esc or the
-        #   right-mouse button is clicked) to click-add blobs
+
         
         
 
