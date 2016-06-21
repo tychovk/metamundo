@@ -2,8 +2,6 @@
 
 .grid {
     margin-left: 20px;
-    width: 3000px;
-
 }
 .grid .col {
     cursor:pointer;
@@ -17,3 +15,13 @@
     background-color:yellow;
     font-weight:bold; color:red;
 }
+
+.grid .blob_0 {
+    background-color: green;
+    font-weight:bold; color:red;
+}
+
+
+/* toggle button */
+.on { background:green; }
+.off { background:red; }

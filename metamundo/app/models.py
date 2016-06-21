@@ -12,6 +12,7 @@ class World(models.Model):
 class Blob(models.Model):
     x = models.IntegerField(default=None)
     y = models.IntegerField(default=None)
+    stage = models.IntegerField(default=0)
     world = models.ForeignKey(World, default=None)
 
 # Create your models here.

@@ -3,7 +3,7 @@ from django.core.urlresolvers import resolve
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 
-from app.generator import WorldGrid
+from app.generator import WorldGrid, BlobGenerator
 from app.views import home_page, control_panel, new_world, view_world
 from app.models import World, Blob
 
@@ -42,7 +42,8 @@ class ControlPanelTest(TestCase):
 
         response = self.client.post(
             '/world/{}/add_blob'.format(world.id),
-            data={'new_blob_coords': [1,2]}
+            data={'entered_blob_coords': "1 2", 'spawn_blob': 'Spawn Blob',
+                  'override_hidden': 'off'}
         )
 
         self.assertRedirects(response, '/world/{}/'.format(world.id))
@@ -140,15 +141,16 @@ class BlobSpawnTest(TestCase):
 
         self.client.post(
             '/world/{}/add_blob'.format(world.id),
-            data={'new_blob_coords': [1,2]}
+            data={'entered_blob_coords': "11 5", 'spawn_blob': 'Spawn Blob',
+                  'override_hidden': 'off'}
         )
         
         self.assertEqual(Blob.objects.count(), 1)
 
         saved_blob = Blob.objects.first()
 
-        self.assertEqual(saved_blob.x, 1)
-        self.assertEqual(saved_blob.y, 2)
+        self.assertEqual(saved_blob.x, 11)
+        self.assertEqual(saved_blob.y, 5)
         self.assertEqual(saved_blob.world, world)
 
 
@@ -184,7 +186,6 @@ class BlobSpawnTest(TestCase):
         self.assertEqual(saved_second_blob.y, 2)
 
 
-
     def test_displays_only_blobs_for_that_world(self):
         correct_world = World.objects.create()
 
@@ -208,3 +209,54 @@ class BlobSpawnTest(TestCase):
             self.assertNotEqual(6, blob.y)
             self.assertNotEqual(7, blob.x)
             self.assertNotEqual(8, blob.y)
+
+class BlobGeneratorTest(TestCase):
+
+    def test_too_close_blob_spawns_without_override(self):
+        world = World.objects.create()
+        blob_gen = BlobGenerator(world)
+        override = False
+        first_x = 1
+        first_y = 1
+        second_x = 2
+        second_y = 2
+
+        spawn_blob_1 = blob_gen.spawn_blob(new_blob_x=first_x, 
+                                           new_blob_y=first_y,
+                                           override=override)
+
+        Blob.objects.create(x=spawn_blob_1[0], y=spawn_blob_1[1], stage=0, 
+                            world=world)
+
+
+
+        spawn_blob_2 = blob_gen.spawn_blob(new_blob_x=second_x, 
+                                           new_blob_y=second_y,
+                                           override=override)
+        
+        self.assertTrue(spawn_blob_1)
+        self.assertFalse(spawn_blob_2)
+        
+
+    def test_too_close_blob_spawns_with_override(self):
+        world = World.objects.create()
+        blob_gen = BlobGenerator(world)
+        override = True
+        first_x = 1
+        first_y = 1
+        second_x = 2
+        second_y = 2
+
+        spawn_blob_1 = blob_gen.spawn_blob(new_blob_x=first_x, 
+                                           new_blob_y=first_y,
+                                           override=override)
+
+        Blob.objects.create(x=spawn_blob_1[0], y=spawn_blob_1[1], stage=0, 
+                            world=world)
+
+        spawn_blob_2 = blob_gen.spawn_blob(new_blob_x=second_x, 
+                                           new_blob_y=second_y,
+                                           override=override)
+        
+        self.assertTrue(spawn_blob_1)
+        self.assertTrue(spawn_blob_2)

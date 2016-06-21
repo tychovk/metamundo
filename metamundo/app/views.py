@@ -3,6 +3,7 @@ from app.models import World, Blob
 from app.generator import WorldGrid, BlobGenerator
 import json
 import logging
+import re
 
 logging.basicConfig(level=logging.INFO)
 
@@ -29,7 +30,18 @@ def view_world(request, world_id):
 def add_blob(request, world_id):
     world = World.objects.get(id=world_id)
     if request.method == 'POST':
-        new_blob = request.POST.getlist('new_blob_coords')
+        if request.POST.get('spawn_blob'):
+            new_blob = request.POST.get('entered_blob_coords')
+        elif request.POST.get('add_blob_at'):
+            new_blob = request.POST.get('selected_blob_coords')
+
+        pop_control_button = request.POST.get('override_hidden')
+
+        logging.info (pop_control_button)
+
+        override = False
+        if 'off' in pop_control_button:
+            override = True
 
         '''
         # future use
@@ -47,17 +59,24 @@ def add_blob(request, world_id):
         x = None
         y = None
         if new_blob:
-            x = int(new_blob[0])
-            y = int(new_blob[1])
+            new_blob_coords = re.findall("[-+]?\d+", new_blob)
+            x = int(new_blob_coords[0])
+            y = int(new_blob_coords[1])
 
         blob_gen = BlobGenerator(world)
-        spawn_blob = blob_gen.spawn_blob(new_blob_x=x, new_blob_y=y)
+        spawn_blob = blob_gen.spawn_blob(new_blob_x=x, new_blob_y=y, 
+                                         override=override)
+
+
         if spawn_blob:
             x_generated = spawn_blob[0]
             y_generated = spawn_blob[1]
-            Blob.objects.create(x=x_generated, y=y_generated, world=world)
+
+            Blob.objects.create(x=x_generated, y=y_generated, stage=0, 
+                                world=world)
             world.status_message = "New blob was spawned at: {x}, {y}" \
                                     .format(x=x_generated, y=y_generated)
+            world.save()
         else:
             world.status_message = "The would-be-blob was too close to other blobs."
             world.save()

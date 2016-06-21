@@ -66,8 +66,7 @@ class BlobGenerator:
         self.x_upper_bound = world.x_upper_bound
         self.y_lower_bound = world.y_lower_bound
         self.y_upper_bound = world.y_upper_bound
-        self.blob_coords = tuple((blob.x, blob.y) for blob in Blob.objects.all().filter(world=world))
-
+        self.world = world
 
     def coords_gen(self, x=None, y=None):
         new_coords = [random.randrange(self.x_lower_bound, self.x_upper_bound), 
@@ -81,20 +80,23 @@ class BlobGenerator:
         Returns True if blob was spawned
         Returns False if no blob was spawned
         '''
+        
+        blob_coords = tuple((blob.x, blob.y) \
+                      for blob in Blob.objects.all().filter(world=self.world))
 
         if new_blob_x is None or new_blob_y is None:
             new_blob_coords = self.coords_gen()
             new_blob_x = new_blob_coords[0]
             new_blob_y = new_blob_coords[1]
 
-        for old_blob in self.blob_coords:
+        for old_blob in blob_coords:
             old_blob_x = old_blob[0]
             old_blob_y = old_blob[1]
 
             distance = math.sqrt((new_blob_x - old_blob_x)**2 +
                                  (new_blob_y - old_blob_y)**2)
 
-            if distance <= 200 and override is False:
+            if distance <= 20 and override is False:
                 return False
 
         return (new_blob_x, new_blob_y)

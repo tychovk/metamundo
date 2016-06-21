@@ -15,6 +15,41 @@
     <!-- end cartesian plane -->
 
 
+
+
+    <script language="javascript">
+      function override(item, hidden_button, default_value, alt_value) {
+        if (alt_value === undefined) {
+          alt_value = current_value;
+        }
+        if (default_value === undefined) {
+          default_value = item.value;
+        }
+
+        if (item.classList.contains("on")) {
+          item.classList.remove("on");
+          item.classList.add("off");
+          document.getElementById(hidden_button).value = "off";
+
+          if (item.value == default_value) {
+            item.value = alt_value;
+          } else {
+            item.value = default_value;
+          }
+        } else {
+          item.classList.remove("off");
+          item.classList.add("on");
+          document.getElementById(hidden_button).value = "on";
+
+          if (item.value == default_value) {
+            item.value = alt_value;
+          } else {
+            item.value = default_value;
+          }
+        }
+      }
+    </script>
+
 </head>
 
 <body>
@@ -37,29 +72,34 @@
           <input type="submit" value="Start New World" id="start_world"/>
       {% csrf_token %}
       </form>
+
       <form method="POST" action="/world/{{ world.id }}/add_blob">
         <input type="text" placeholder="'x y', e.g '32 13'. Default is random" 
-               id="new_blob_coords"/>
-        <input type="submit" value="Spawn Blob" id="spawn_blob"/> 
+               name="entered_blob_coords"/>
+        <input type="submit" value="Spawn Blob" name="spawn_blob" id="spawn_blob"/> 
+        <input type="submit" value="Spawn blob in selected coordinates" name="add_blob_at"/>
+        <input type="hidden" value="" name="selected_blob_coords" id="clickedField"/>
+       
+        <input type="button" value="Blob population control on" name="override_button" class="on" onclick="override(this, 'override_hidden', 'Blob population control on', 'Blob population control off')"/>
+        <input type="hidden" value="on" name="override_hidden" id="override_hidden"/>
         {% csrf_token %}
+
       </form>
 
 
-      <input type="submit" value="Add blob at selected coordinates" id="add_blob_at"/>
-      <input type="submit" value="Start simulation" id="start_simulation"/>
 
-      {% if blobs %}
-        {{ blobs }}
-        {% for blob in blobs %}
-          {{ blob.x }}, {{ blob.y }}
-        {% endfor %}
-      {% endif %}
+      <input type="submit" value="Start simulation" id="start_simulation"/>
         
         <span id="status_box">{{ world.status_message }}</span>
-
+        <span>All blobs:
+        {% for blob in blobs %}
+          ({{ blob.x }}, {{ blob.y }}) 
+        {% endfor %} </span>
 
         <div id="world_grid"></div>
         <div id='grid_container'></div>
+        <p><br><br>
+        <div id='world_with_blobs_container'></div>
     {% endif %}
 
 
@@ -76,29 +116,37 @@ Zoom of grid 3
 
 
 <!-- grid1_alt -->
+
 <script type="text/JavaScript">
+
+
+
+
     var numRows = {{ world.x_upper_bound }} - {{ world.x_lower_bound }};
     var numCols = {{ world.y_upper_bound }} - {{ world.y_lower_bound }};
 
-
     var lastClicked;
-    var grid = clickableGrid(numRows, numCols, function(el,row,col,i){
+    var world_grid = clickableGrid(numRows, numCols, function(el,row,col,i){
     console.log("You clicked on element:",el);
     console.log("You clicked on row:",row);
     console.log("You clicked on col:",col);
     console.log("You clicked on item #:",i);
 
     el.classList.add('clicked');
+    document.getElementById('clickedField').value = el.id;
     if (lastClicked) lastClicked.classList.remove('clicked');
     if (lastClicked == el) lastClicked = null;
     else lastClicked = el; 
     });
 
-
-
-    function clickableGrid( rows, cols, callback ){
+    
+    function clickableGrid( rows, cols, callback ) {
     var i=0;
     var grid = document.createElement('div');
+    var gridWidth = numRows * 20;
+    grid.id = "grid";
+    grid.setAttribute("style", "width:" + gridWidth)
+
     grid.className = 'grid';
     for (var r=0;r<rows;++r){
         var row = grid.appendChild(document.createElement('div'));
@@ -106,22 +154,51 @@ Zoom of grid 3
         for (var c=0;c<cols;++c){
             var cell = row.appendChild(document.createElement('div'));
             cell.className="col";
+            cell.id = r + " " + c;
             //cell.innerHTML = '';
             //cell.innerHTML = ++i;
             cell.addEventListener('click',(function(el,r,c,i){
                 return function(){
                     callback(el,r,c,i);
                 }
-            })(cell,r,c,i),false);
-        }
-
+            }) (cell,r,c,i), false);
+          }
     }
     return grid;
     }
 
-    var grid_container = document.getElementById('grid_container');
-    grid_container.appendChild(grid);
 
+    function showBlobs() {
+
+        {% for blob in blobs %}
+          var id = "{{ blob.x }} {{ blob.y }}";
+          var blob_box = document.getElementById(id);
+          var blob_class = 'blob_{{blob.stage}}';
+          if (blob_box) { blob_box.classList.add(blob_class) };
+        {% endfor %}
+      }
+
+/*
+        for (blob in blobs) {
+         // if (blob.x >= {{ world.x_lower_bound }} && blob.x <= {{ world.x_upper_bound }} && blob.y >= {{world.y_lower_bound }} && blob.y <= {{ world.y_upper_bound }}) {
+              var id = String(blob.x + ' ' + blob.y);
+
+              document.write("The id" + id);
+
+              var blob_box = document.getElementById(id);
+              var blob_class = String('blob_' + blob.stage);
+              if (blob_box) {blob_box.classList.add("blob_class")};
+            }
+    }
+*/
+
+
+    var grid_container = document.getElementById('grid_container');
+    grid_container.appendChild(world_grid);
+
+    {% if blobs %}
+      showBlobs();
+    {% endif %}
 
 </script>
 <!-- end grid1_alt -->
