@@ -20,3 +20,7 @@ http://jsfiddle.net/CVVE6/11/
 
 http://jsfiddle.net/6qkdP/2/
 
+
+
+for postgresql:
+sudo -u postgres psql

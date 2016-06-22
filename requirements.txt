@@ -8,3 +8,5 @@ kombu==3.0.35
 pytz==2016.4
 redis==2.10.5
 selenium==2.53.5
+psycopg2
+dj-database-url

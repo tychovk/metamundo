@@ -77,8 +77,14 @@ WSGI_APPLICATION = 'metamundo.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'metamundo_db',
+        'USER': 'diego',
+        'PASSWORD': 'mastacos',
+        'HOST': 'localhost',
+        'PORT': '',
+
+        #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -126,3 +132,7 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles/')
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = ()
+
+
+#import dj_database_url
+#DATABASES['default'] =  dj_database_url.config()
