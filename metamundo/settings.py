@@ -134,5 +134,5 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles/')
 STATICFILES_DIRS = ()
 
 
-#import dj_database_url
-#DATABASES['default'] =  dj_database_url.config()
+import dj_database_url
+sDATABASES['default'] =  dj_database_url.config()
