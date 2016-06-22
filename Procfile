@@ -1,1 +1,1 @@
-web: gunicorn metamundo.wsgi --log-file -
+web: gunicorn /metamundo/metamundo.wsgi --log-file -
