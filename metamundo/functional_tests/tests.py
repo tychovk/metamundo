@@ -45,7 +45,7 @@ class MetamundoControler(StaticLiveServerTestCase):
     def test_control_functions(self):
 
         # A visitor gets to the main page:
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
 
         # We see it in the title
         # self.assertIn('Metamundo Control Panel', self.browser.title)
@@ -166,7 +166,7 @@ class MetamundoControler(StaticLiveServerTestCase):
 
     def test_layout_and_styling(self):
         # go to the home page
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         self.browser.set_window_size(1024, 768)
 
         self.fail('Finish these tests too')
