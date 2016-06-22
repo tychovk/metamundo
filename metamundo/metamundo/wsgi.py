@@ -1,5 +1,5 @@
 """
-WSGI config for superlists project.
+WSGI config for metamundo project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
