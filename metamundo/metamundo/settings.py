@@ -126,5 +126,5 @@ STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '../../static'))
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, '../app/static'),
+    os.path.join(BASE_DIR, 'app/static'),
 )
