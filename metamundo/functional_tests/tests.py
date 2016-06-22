@@ -7,11 +7,24 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
 
 import math
-
+import sys
 
 
 class MetamundoControler(StaticLiveServerTestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        for arg in sys.argv:
+            if 'liveserver' in arg:
+                cls.server_url = 'http://' + arg.split('=')[1]
+                return
+        super().setUpClass()
+        cls.server_url = cls.live_server_url
+
+    @classmethod
+    def teardownClass(cls):
+       if cls.server_url == cls.live_server_url:
+            super().tearDownClass()
 
 
     def setUp(self):
@@ -32,7 +45,7 @@ class MetamundoControler(StaticLiveServerTestCase):
     def test_control_functions(self):
 
         # A visitor gets to the main page:
-        self.browser.get("http://localhost:8000")
+        self.browser.get(self.live_server_url)
 
         # We see it in the title
         # self.assertIn('Metamundo Control Panel', self.browser.title)
@@ -68,7 +81,7 @@ class MetamundoControler(StaticLiveServerTestCase):
         # After we've created/selected a world, we see three new buttons:
         # - Spawn blob (with text box for choosing coords)
         self.assertTrue(self.is_element_present(By.ID, "spawn_blob"))
-        self.assertTrue(self.is_element_present(By.ID, "new_blob_coords"))
+        self.assertTrue(self.is_element_present(By.ID, "entered_blob_coords"))
         
         # - Start simulation
         self.assertTrue(self.is_element_present(By.ID, "start_simulation"))
@@ -85,8 +98,14 @@ class MetamundoControler(StaticLiveServerTestCase):
         # A status box shows tells us where the blob was placed.
         status_box = self.browser.find_element_by_id("status_box")
         self.assertIn("New blob was spawned at:", status_box.text)
+
+        # There is a message with all blobs showing now:
+        self.assertTrue(self.is_element_present(By.ID, "all_blobs"))
+
         new_blob_coords = [int(s) for s in re.findall(r'[-+]?\d+', status_box)]
         self.assertTrue(len(new_blob_coords), 2)
+
+
 
         # We see that box in the grid now green
 
@@ -145,6 +164,14 @@ class MetamundoControler(StaticLiveServerTestCase):
         # The button is replaced with a button that says "Stop the time".
         # This button is clicked, and the time is stopped.
 
+    def test_layout_and_styling(self):
+        # go to the home page
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        self.fail('Finish these tests too')
+
+        # We notice 
 
 
 

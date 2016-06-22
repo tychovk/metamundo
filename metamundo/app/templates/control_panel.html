@@ -91,10 +91,14 @@
       <input type="submit" value="Start simulation" id="start_simulation"/>
         
         <span id="status_box">{{ world.status_message }}</span>
-        <span>All blobs:
-        {% for blob in blobs %}
-          ({{ blob.x }}, {{ blob.y }}) 
-        {% endfor %} </span>
+        
+        {% if blobs %}
+          <span id="all_blobs">All blobs:
+            {% for blob in blobs %}
+              ({{ blob.x }}, {{ blob.y }}) 
+            {% endfor %} 
+          </span>
+        {% endif %}
 
         <div id="world_grid"></div>
         <div id='grid_container'></div>
