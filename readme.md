@@ -70,13 +70,11 @@ app.controller('testController', function() {
 
 ```
 
-Changed the interpolation (templating brackets) to `:{ <content> }:`
-I have this rudimentary controller there, with data object data
-and most importantly, a set function
-on the flask side
+Will change the interpolation (templating brackets) to `:{ <content> }:`
+See this rudimentary controller with data object data - and most importantly - a set function on the flask side
 
  ```
- from testapp import app
+from testapp import app
 from flask import render_template
 import json
 
@@ -89,11 +87,9 @@ def index():
 
 ```
 
-all i want to do is pass this simple array object with numbers 1-4,
-i initialy used JSON loads, but found it wasn't necessary - I just passed in the actual object
+JSON loads aren't necessary - pass the actual object
 
-and that's because in `index.html`...
-
+`index.html`:
 
  ```
  <!DOCTYPE html>
@@ -132,14 +128,12 @@ and that's because in `index.html`...
 
 ```
 
-notice `{{ options|tojson|safe }}`
+Notice `{{ options|tojson|safe }}`
 
 jinja2 has a built-in filter to convert said object to json on the HTML doc
 
 what's more interesting is that I'm able to pass in this Jinja2 interpolated Python array, within a Angular interpolated controller func
 
-so I gave this `testController` a piece of data that originated from Python
+`testController` receives a piece of data that originated from Python and then the controller can have functions to work with it.
 
-and then the controller can have functions to do shit with it
-
-
+Django is similar.
