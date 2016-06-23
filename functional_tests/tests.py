@@ -174,6 +174,19 @@ class MetamundoControler(StaticLiveServerTestCase):
         # We notice 
 
 
+def test_layout_and_styling(self):
+        # go to the home page
+        self.browser.get(self.server_url)
+        self.browser.set_window_size(1024, 768)
+
+        about_page = self.browser.find_element_by_id('about')
+
+        about.page.send_keys(Keys.ENTER)
+
+        page_text = self.browser.find_element_by_tag_name('body').text   
+        self.assertIn(page_text, "Tycho van Kleef")
+        
+        # We notice 
 
 """
 class MetamundoTest(StaticLiveServerTestCase):
