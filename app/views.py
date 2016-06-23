@@ -74,11 +74,15 @@ def add_blob(request, world_id):
 
             Blob.objects.create(x=x_generated, y=y_generated, stage=0, 
                                 world=world)
-            world.status_message = "New blob was spawned at: {x}, {y}" \
+            world.status_message = "We have a newcomer! Say hello to your new "\
+                                   "little green friend at {x}, {y}." \
                                     .format(x=x_generated, y=y_generated)
             world.save()
         else:
-            world.status_message = "The would-be-blob was too close to other blobs."
+            world.status_message = "The would-be-blob didn't feel so "\
+                                   "comfortable popping into existence so "\
+                                   "close to other blobs. "\
+                                   "Hmm... Maybe a bit farther away."
             world.save()
     return redirect('/world/{}/'.format(world.id))
 

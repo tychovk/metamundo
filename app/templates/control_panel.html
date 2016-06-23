@@ -66,48 +66,43 @@
 
     {% elif world %}
 
- 
-        <div class="form-inline form-group pull-left">
-          <form method="POST" action="/world/{{ world.id }}/add_blob">
-            <input type="text" name="entered_blob_coords"
-                   class="form-control"
-                   placeholder="'x y', e.g '32 13'. Default is random" 
-                   id="entered_blob_coords"/>
-            <input type="submit" name="spawn_blob" 
-                   class="btn btn-default"
-                   value="Spawn Blob" 
-                   id="spawn_blob"/>
-            {% csrf_token %}
-          </form>
-        </div>
-        <div class="form-inline form-group pull-right">
+         <div class="form-inline form-group pull-right">
           <form method="POST" action="/world/new">
             <input type="submit" 
                    class="btn btn-primary"
                    value="Start New World" 
                    id="start_world"/>
-          {% csrf_token %}
-        </form>
-      </div>
-      
+            {% csrf_token %}
+          </form>
+        </div>
+        <div class="form-inline form-group pull-left">
+          <form method="POST" action="/world/{{ world.id }}/add_blob">
+            <input type="text" name="entered_blob_coords"
+                   class="form-control"
+                   placeholder="'x y', e.g '2 13'. Default is random" 
+                   id="entered_blob_coords"/>
+            <input type="submit" name="spawn_blob" 
+                   class="btn btn-default"
+                   value="Spawn Blob" 
+                   id="spawn_blob"/>
+        </div>      
 
 
         <div class="form-group">
-          <form method="POST" action="/world/{{ world.id }}/add_blob">
-            <input type="submit" name="add_blob_at"
-                   class="btn btn-default"
-                   value="Spawn blob in selected coordinates"/>
-            <input type="hidden" name="selected_blob_coords" 
-                   value="" 
-                   id="clickedField"/>
-            <input type="button" name="override_button" 
-                   class="btn on"
-                   value="Blob population control on" 
-                   onclick="override(this, 'override_hidden', 'Blob population control on', 'Blob population control off')"/>
-            <input name="override_hidden" type="hidden" 
-                   value="on" 
-                   id="override_hidden"/>
-            {% csrf_token %}
+          <input type="submit" name="add_blob_at"
+                 class="btn btn-default"
+                 value="Spawn blob in selected coordinates"/>
+          <input type="hidden" name="selected_blob_coords" 
+                 value="" 
+                 id="clickedField"/>
+          <input type="button" name="override_button" 
+                 class="btn on"
+                 value="Blob population control on" 
+                 onclick="override(this, 'override_hidden', 'Blob population control on', 'Blob population control off')"/>
+          <input name="override_hidden" type="hidden" 
+                 value="on" 
+                 id="override_hidden"/>
+          {% csrf_token %}
           </form>
         </div>
 
@@ -116,20 +111,21 @@
 
 
       <div class="form-group">
-      <input type="submit" id="start_simulation"
-             class="btn btn-success disabled"
-             value="Start simulation" />
-        
-      <span id="status_box">{{ world.status_message }}</span>
+        <input type="submit" id="start_simulation"
+               class="btn btn-success disabled"
+               value="Start simulation" />
+     </div>
+      <div class="jumbotron" id="status_box">
+        {{ world.status_message }}
         
         {% if blobs %}
-          <p id="all_blobs">All blobs:
+          <br><span id="all_blobs">All blobs:
             {% for blob in blobs %}
               ({{ blob.x }}, {{ blob.y }}) 
             {% endfor %} 
           </span>
         {% endif %}
-      </div>
+     </div>
     </div>
     <p>
     <div id="world_grid"></div>
