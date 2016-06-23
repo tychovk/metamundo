@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^world/(\d+)/add_blob$', views.add_blob, name='add_blob'),
     url(r'^grid/(\d+)/$', views.view_grid, name='view_grid'),
     url(r'^grid/new$', views.new_grid, name='new_grid'),
+    url(r'^about/$', views.about, name='about'),
     #url(r'^admin/', admin.site.urls),
     
 ]

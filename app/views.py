@@ -100,3 +100,5 @@ def view_grid(request, world_id):
     return render(request, 'grid.html', {'world': world})
 
     
+def about(request):
+    return render(request, 'about.html')
