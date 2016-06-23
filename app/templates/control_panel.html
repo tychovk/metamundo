@@ -1,20 +1,17 @@
-<html>
-<head>
-    <title>Metamundo Control Panel</title>
+{% extends 'base.html' %}
 
-    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+{% block title-extension %}- Control Panel{% endblock %}
+
+
+{% block head %}
     <link href="/static/grid.css" rel="stylesheet">
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
-
-
 
     <!-- cartesian plane -->
      <link rel="stylesheet" type="text/css" href="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" />
     <script type="text/JavaScript" src="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraphcore.js"></script>
     <!-- end cartesian plane -->
-
-
 
 
     <script language="javascript">
@@ -50,13 +47,14 @@
       }
     </script>
 
-</head>
-
-<body>
- 
-    <h1>Control Panel</h1>
+{% endblock %}
 
 
+{% block current-page %}Control Panel{% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="col-md-6 col-md-offset-3" id="banner">
     {% if not world %}
 
       No world yet... 
@@ -68,49 +66,83 @@
 
     {% elif world %}
 
-      <form method="POST" action="/world/new">
-          <input type="submit" value="Start New World" id="start_world"/>
-      {% csrf_token %}
-      </form>
+ 
+        <div class="form-inline form-group pull-left">
+          <form method="POST" action="/world/{{ world.id }}/add_blob">
+            <input type="text" name="entered_blob_coords"
+                   class="form-control"
+                   placeholder="'x y', e.g '32 13'. Default is random" 
+                   id="entered_blob_coords"/>
+            <input type="submit" name="spawn_blob" 
+                   class="btn btn-default"
+                   value="Spawn Blob" 
+                   id="spawn_blob"/>
+            {% csrf_token %}
+          </form>
+        </div>
+        <div class="form-inline form-group pull-right">
+          <form method="POST" action="/world/new">
+            <input type="submit" 
+                   class="btn btn-primary"
+                   value="Start New World" 
+                   id="start_world"/>
+          {% csrf_token %}
+        </form>
+      </div>
+      
 
-      <form method="POST" action="/world/{{ world.id }}/add_blob">
-        <input type="text" placeholder="'x y', e.g '32 13'. Default is random" name="entered_blob_coords"
-               id="entered_blob_coords"/>
-        <input type="submit" value="Spawn Blob" 
-               name="spawn_blob" id="spawn_blob"/> 
-        <input type="submit" value="Spawn blob in selected coordinates" name="add_blob_at"/>
-        <input type="hidden" value="" name="selected_blob_coords" id="clickedField"/>
-       
-        <input type="button" value="Blob population control on" name="override_button" class="on" onclick="override(this, 'override_hidden', 'Blob population control on', 'Blob population control off')"/>
-        <input type="hidden" value="on" name="override_hidden" id="override_hidden"/>
-        {% csrf_token %}
 
-      </form>
+        <div class="form-group">
+          <form method="POST" action="/world/{{ world.id }}/add_blob">
+            <input type="submit" name="add_blob_at"
+                   class="btn btn-default"
+                   value="Spawn blob in selected coordinates"/>
+            <input type="hidden" name="selected_blob_coords" 
+                   value="" 
+                   id="clickedField"/>
+            <input type="button" name="override_button" 
+                   class="btn on"
+                   value="Blob population control on" 
+                   onclick="override(this, 'override_hidden', 'Blob population control on', 'Blob population control off')"/>
+            <input name="override_hidden" type="hidden" 
+                   value="on" 
+                   id="override_hidden"/>
+            {% csrf_token %}
+          </form>
+        </div>
 
 
 
-      <input type="submit" value="Start simulation" id="start_simulation"/>
+
+
+      <div class="form-group">
+      <input type="submit" id="start_simulation"
+             class="btn btn-success disabled"
+             value="Start simulation" />
         
-        <span id="status_box">{{ world.status_message }}</span>
+      <span id="status_box">{{ world.status_message }}</span>
         
         {% if blobs %}
-          <span id="all_blobs">All blobs:
+          <p id="all_blobs">All blobs:
             {% for blob in blobs %}
               ({{ blob.x }}, {{ blob.y }}) 
             {% endfor %} 
           </span>
         {% endif %}
+      </div>
+    </div>
+    <p>
+    <div id="world_grid"></div>
+    <div class="grid-container" style="clear:both;" id='grid_container'></div>
 
-        <div id="world_grid"></div>
-        <div id='grid_container'></div>
-        <p><br><br>
-        <div id='world_with_blobs_container'></div>
-    {% endif %}
+    <div id='world_with_blobs_container'></div>
+</div>
+  {% endif %}
 
 
-</body>
+{% endblock %}
 
-
+{% block javascript %}
 <!-- ideas:
 
 Speed and simplicity of grid1 BUT this needs 2 to zoom
@@ -312,4 +344,4 @@ Zoom of grid 3
     board.on('down', down);
 </script>
 
-</html>
+{% endblock %}
