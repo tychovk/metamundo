@@ -74,9 +74,10 @@
       </form>
 
       <form method="POST" action="/world/{{ world.id }}/add_blob">
-        <input type="text" placeholder="'x y', e.g '32 13'. Default is random" 
+        <input type="text" placeholder="'x y', e.g '32 13'. Default is random" name="entered_blob_coords"
                id="entered_blob_coords"/>
-        <input type="submit" value="Spawn Blob" name="spawn_blob" id="spawn_blob"/> 
+        <input type="submit" value="Spawn Blob" 
+               name="spawn_blob" id="spawn_blob"/> 
         <input type="submit" value="Spawn blob in selected coordinates" name="add_blob_at"/>
         <input type="hidden" value="" name="selected_blob_coords" id="clickedField"/>
        
