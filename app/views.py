@@ -22,6 +22,7 @@ def home_page(request):
 def new_world(request):
     world = World.objects.create()
     del request.session['pop_control_override']
+    del request.session['status_message']
     return redirect('/world/{}/'.format(world.id))
 
 
@@ -49,20 +50,7 @@ def add_blob(request, world_id):
 
         pop_control_value = request.POST.get('override_hidden')
         pop_control = update_session(request, pop_control_value, 'pop_control_override', 'on', 'off')
-
         logging.info(pop_control)
-
-        '''
-        pop_control_button = request.POST.get('override_hidden')
-        logging.info (pop_control_button)
-
-        if 'off' in pop_control_button:
-            #override = True
-            request.session['pop_control_override'] = 'off'
-        else:
-            #override = False
-            request.session['pop_control_override'] = 'on'
-        '''
         
         '''
         # future use
@@ -95,16 +83,16 @@ def add_blob(request, world_id):
 
             Blob.objects.create(x=x_generated, y=y_generated, stage=0, 
                                 world=world)
-            world.status_message = "We have a newcomer! Say hello to your new "\
-                                   "little green friend at {x}, {y}." \
+            request.session['status_message'] = "We have a newcomer!"\
+                                                " Say hello to your new "\
+                                                "little green friend at "\
+                                                "{x}, {y}."\
                                     .format(x=x_generated, y=y_generated)
-            world.save()
         else:
-            world.status_message = "The would-be-blob didn't feel so "\
+            request.session['status_message'] = "The would-be-blob didn't feel so "\
                                    "comfortable popping into existence so "\
                                    "close to other blobs. "\
                                    "Hmm... Maybe a bit farther away."
-            world.save()
     return redirect('/world/{}/'.format(world.id))
 
 

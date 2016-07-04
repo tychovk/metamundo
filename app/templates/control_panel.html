@@ -79,7 +79,7 @@
           <form method="POST" action="/world/{{ world.id }}/add_blob">
             <input type="text" name="entered_blob_coords"
                    class="form-control"
-                   placeholder="'x y', e.g '2 13'. Default is random" 
+                   placeholder="'x y', e.g '2 13'. Default is random." 
                    id="entered_blob_coords"/>
             <input type="submit" name="spawn_blob" 
                    class="btn btn-default"
@@ -98,7 +98,8 @@
           <input type="button" name="override_button" 
                  class="btn {{ request.session.pop_control_override }}"
                  value="Blob population control {{ request.session.pop_control_override }}" 
-                 onclick="override(this, 'override_hidden', 'Blob population control on', 'Blob population control off')"/>
+                 onclick="override(this, 'override_hidden', 'Blob population control on', 'Blob population control off')"
+                 style="width:210px;"/>
           <input name="override_hidden" type="hidden" 
                  value="{{ request.session.pop_control_override }}" 
                  id="override_hidden"/>
@@ -117,7 +118,7 @@
                  value="Start simulation" />
         </div>
         <div class="jumbotron" id="status_box">
-          {{ world.status_message }}
+          {{ request.session.status_message }}
           
           {% if blobs %}
             <br><span id="all_blobs">All blobs:

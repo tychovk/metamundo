@@ -7,7 +7,6 @@ class World(models.Model):
     y_lower_bound = models.IntegerField(default=0)
     y_upper_bound = models.IntegerField(default=50)
     day = models.IntegerField(default=0)
-    status_message = models.TextField(max_length=100, default='')
 
 class Blob(models.Model):
     x = models.IntegerField(default=None)
