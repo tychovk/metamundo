@@ -78,17 +78,18 @@ class MetamundoControler(StaticLiveServerTestCase):
         # The first world we created is not the same as the second one
         self.assertNotEqual(first_world, second_world)
 
-        # After we've created/selected a world, we see three new buttons:
+        # After we've created/selected a world, we see four buttons on the page:
         # - Spawn blob (with text box for choosing coords)
         self.assertTrue(self.is_element_present(By.ID, "spawn_blob"))
+        # - Spawn blob in selected coordinates
         self.assertTrue(self.is_element_present(By.ID, "entered_blob_coords"))
         
-        # - Start simulation
-        self.assertTrue(self.is_element_present(By.ID, "start_simulation"))
-
         # - Add blob (different colour, which stays activated until esc or the
         #   right-mouse button is clicked) to click-add blobs
-        self.assertTrue(self.is_element_present(By.ID, "add_blob_at"))
+        # self.assertTrue(self.is_element_present(By.ID, "add_blob_at"))
+
+        # - Start simulation
+        self.assertTrue(self.is_element_present(By.ID, "start_simulation"))
 
         ## Spawn Blob
         # We press the "Spawn Blob" button...

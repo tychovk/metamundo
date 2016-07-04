@@ -74,7 +74,7 @@ class BlobGenerator:
         return new_coords
 
 
-    def spawn_blob(self, new_blob_x=None, new_blob_y=None, override=False):
+    def spawn_blob(self, new_blob_x=None, new_blob_y=None, pop_control=True):
         '''
         Spawns a new lone blob more than 200 steps away from other blobs.
         Returns True if blob was spawned
@@ -96,7 +96,7 @@ class BlobGenerator:
             distance = math.sqrt((new_blob_x - old_blob_x)**2 +
                                  (new_blob_y - old_blob_y)**2)
 
-            if distance <= 20 and override is False:
+            if distance <= 20 and pop_control is True:
                 return False
 
         return (new_blob_x, new_blob_y)

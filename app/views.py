@@ -7,6 +7,13 @@ import re
 
 logging.basicConfig(level=logging.INFO)
 
+def update_session(request, post_value, var_name, val_1, val_2):
+    if val_1 in post_value:
+        request.session[var_name] = val_1
+        return True
+    else:
+        request.session[var_name] = val_2
+        return False
 
 def home_page(request):
     return render(request, 'home.html')
@@ -22,12 +29,17 @@ def view_world(request, world_id):
 #    if hasattr(world, 'world_coords'):
 #        world_coords = json.loads(world.world_coords) # what is going on here
     blobs = Blob.objects.all().filter(world=world)
+
+
+    if 'pop_control_override' not in request.session:
+        request.session['pop_control_override'] = 'on'
+
     return render(request, 'control_panel.html', 
                 { 'world': world,
                   'blobs': blobs})
 
 
-def add_blob(request, world_id):
+def add_blob(request, world_id, override=False):
     world = World.objects.get(id=world_id)
     if request.method == 'POST':
         if request.POST.get('spawn_blob'):
@@ -35,14 +47,23 @@ def add_blob(request, world_id):
         elif request.POST.get('add_blob_at'):
             new_blob = request.POST.get('selected_blob_coords')
 
-        pop_control_button = request.POST.get('override_hidden')
+        pop_control_value = request.POST.get('override_hidden')
+        pop_control = update_session(request, pop_control_value, 'pop_control_override', 'on', 'off')
 
+        logging.info(pop_control)
+
+        '''
+        pop_control_button = request.POST.get('override_hidden')
         logging.info (pop_control_button)
 
-        override = False
         if 'off' in pop_control_button:
-            override = True
-
+            #override = True
+            request.session['pop_control_override'] = 'off'
+        else:
+            #override = False
+            request.session['pop_control_override'] = 'on'
+        '''
+        
         '''
         # future use
         blobs_query = [
@@ -65,7 +86,7 @@ def add_blob(request, world_id):
 
         blob_gen = BlobGenerator(world)
         spawn_blob = blob_gen.spawn_blob(new_blob_x=x, new_blob_y=y, 
-                                         override=override)
+                                         pop_control=pop_control)
 
 
         if spawn_blob:
