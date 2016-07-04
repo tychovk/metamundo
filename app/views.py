@@ -7,12 +7,12 @@ import re
 
 logging.basicConfig(level=logging.INFO)
 
-def update_session(request, post_value, var_name, val_1, val_2):
+def update_session(request, post_value, key_name, val_1, val_2):
     if val_1 in post_value:
-        request.session[var_name] = val_1
+        request.session[key_name] = val_1
         return True
     else:
-        request.session[var_name] = val_2
+        request.session[key_name] = val_2
         return False
 
 def home_page(request):
@@ -21,6 +21,7 @@ def home_page(request):
 
 def new_world(request):
     world = World.objects.create()
+    del request.session['pop_control_override']
     return redirect('/world/{}/'.format(world.id))
 
 
@@ -30,7 +31,6 @@ def view_world(request, world_id):
 #        world_coords = json.loads(world.world_coords) # what is going on here
     blobs = Blob.objects.all().filter(world=world)
 
-
     if 'pop_control_override' not in request.session:
         request.session['pop_control_override'] = 'on'
 
@@ -39,7 +39,7 @@ def view_world(request, world_id):
                   'blobs': blobs})
 
 
-def add_blob(request, world_id, override=False):
+def add_blob(request, world_id):
     world = World.objects.get(id=world_id)
     if request.method == 'POST':
         if request.POST.get('spawn_blob'):
