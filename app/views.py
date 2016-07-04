@@ -21,8 +21,10 @@ def home_page(request):
 
 def new_world(request):
     world = World.objects.create()
-    del request.session['pop_control_override']
-    del request.session['status_message']
+    if 'pop_control_override' in request.session:
+        del request.session['pop_control_override']
+    if 'status_message' in request.session:
+        del request.session['status_message']
     return redirect('/world/{}/'.format(world.id))
 
 

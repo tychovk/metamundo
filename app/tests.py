@@ -90,10 +90,6 @@ class ControlPanelTest(TestCase):
 #        print (response.context['blobs'])
 
 
-
-
-
-
 class NewWorldTest(TestCase):
 
     def test_uses_grid_template(self):
@@ -215,7 +211,7 @@ class BlobGeneratorTest(TestCase):
     def test_too_close_blob_spawns_without_override(self):
         world = World.objects.create()
         blob_gen = BlobGenerator(world)
-        override = False
+        pop_control= True
         first_x = 1
         first_y = 1
         second_x = 2
@@ -223,7 +219,7 @@ class BlobGeneratorTest(TestCase):
 
         spawn_blob_1 = blob_gen.spawn_blob(new_blob_x=first_x, 
                                            new_blob_y=first_y,
-                                           override=override)
+                                           pop_control=pop_control)
 
         Blob.objects.create(x=spawn_blob_1[0], y=spawn_blob_1[1], stage=0, 
                             world=world)
@@ -232,7 +228,7 @@ class BlobGeneratorTest(TestCase):
 
         spawn_blob_2 = blob_gen.spawn_blob(new_blob_x=second_x, 
                                            new_blob_y=second_y,
-                                           override=override)
+                                           pop_control=pop_control)
         
         self.assertTrue(spawn_blob_1)
         self.assertFalse(spawn_blob_2)
@@ -241,7 +237,7 @@ class BlobGeneratorTest(TestCase):
     def test_too_close_blob_spawns_with_override(self):
         world = World.objects.create()
         blob_gen = BlobGenerator(world)
-        override = True
+        pop_control = False
         first_x = 1
         first_y = 1
         second_x = 2
@@ -249,14 +245,14 @@ class BlobGeneratorTest(TestCase):
 
         spawn_blob_1 = blob_gen.spawn_blob(new_blob_x=first_x, 
                                            new_blob_y=first_y,
-                                           override=override)
+                                           pop_control=pop_control)
 
         Blob.objects.create(x=spawn_blob_1[0], y=spawn_blob_1[1], stage=0, 
                             world=world)
 
         spawn_blob_2 = blob_gen.spawn_blob(new_blob_x=second_x, 
                                            new_blob_y=second_y,
-                                           override=override)
+                                           pop_control=pop_control)
         
         self.assertTrue(spawn_blob_1)
         self.assertTrue(spawn_blob_2)
