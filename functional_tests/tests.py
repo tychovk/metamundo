@@ -106,7 +106,14 @@ class MetamundoControler(StaticLiveServerTestCase):
         new_blob_coords = [int(s) for s in re.findall(r'[-+]?\d+', status_box)]
         self.assertTrue(len(new_blob_coords), 2)
 
+        # Anything else than "x y" format gets rejected and gives us a status
+        # error message.
+        entered_blob_coords = self.browser.find_element_by_id("entered_blob_coords")
+        entered_blob_coords.send_keys("ddd")
+        entered_blob_coords.send_keys(Keys.ENTER)
 
+        status_box = self.browser.find_element_by_id("status_box")
+        self.assertIn("x y", status_box.text)
 
         # We see that box in the grid now green
 

@@ -71,8 +71,17 @@ def add_blob(request, world_id):
         y = None
         if new_blob:
             new_blob_coords = re.findall("[-+]?\d+", new_blob)
-            x = int(new_blob_coords[0])
-            y = int(new_blob_coords[1])
+            try:
+                x = int(new_blob_coords[0])
+                y = int(new_blob_coords[1])
+            except:
+                request.session['status_message'] = "Wait.. I'm not going to "\
+                                                    "do {}... Make sure your "\
+                                                    "entered coordinates are "\
+                                                    "in 'x y' style. Help me, "\
+                                                    "help you!"\
+                                                    .format(new_blob)
+                return redirect('/world/{}/'.format(world.id))
 
         blob_gen = BlobGenerator(world)
         spawn_blob = blob_gen.spawn_blob(new_blob_x=x, new_blob_y=y, 
@@ -85,8 +94,8 @@ def add_blob(request, world_id):
 
             Blob.objects.create(x=x_generated, y=y_generated, stage=0, 
                                 world=world)
-            request.session['status_message'] = "We have a newcomer!"\
-                                                " Say hello to your new "\
+            request.session['status_message'] = "We have a newcomer! "\
+                                                "Say hello to your new "\
                                                 "little green friend at "\
                                                 "{x}, {y}."\
                                     .format(x=x_generated, y=y_generated)
