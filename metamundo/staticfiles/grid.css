@@ -1,27 +1,39 @@
 /* grid */
 
 .grid {
-    margin-left: 20px;
+
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
 }
 .grid .col {
     cursor:pointer;
     width:20px; height:20px;
-    border:1px solid #ccc;
+    border:1px solid #4f4f4f;
     text-align:center;
     font-family:sans-serif; font-size:13px;
     float: left;
 }
 .grid .clicked {
-    background-color:yellow;
+    background-color: #e59c17;
     font-weight:bold; color:red;
 }
 
 .grid .blob_0 {
-    background-color: green;
+    background-color: #6c7137;
     font-weight:bold; color:red;
+}
+
+.grid-container {
+
+}
+
+#entered_blob_coords {
+    width: 250px;
+
 }
 
 
 /* toggle button */
-.on { background:green; }
-.off { background:red; }
+.on { background: #abad48; }
+.off { background:#d05340; }
