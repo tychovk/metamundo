@@ -7,3 +7,9 @@
     margin-top: 60px;
 
 }
+
+.anchor {
+  font-weight: bold;
+  color: #fff; /* IE8 proofing */
+  color: rgba(255,255,255,.75);
+}
