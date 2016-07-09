@@ -69,8 +69,6 @@ class MetamundoControler(StaticLiveServerTestCase):
         # A pop-up message appears, asking if we really want to create a new
         # world.
 
-
-
         # Now the page contains a grid again
         self.assertTrue(self.is_element_present(By.ID, "world_grid"))
         second_world = self.browser.current_url
