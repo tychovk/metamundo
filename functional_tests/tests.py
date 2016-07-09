@@ -86,7 +86,6 @@ class MetamundoControler(StaticLiveServerTestCase):
         
         # - Add blob (different colour, which stays activated until esc or the
         #   right-mouse button is clicked) to click-add blobs
-        # self.assertTrue(self.is_element_present(By.ID, "add_blob_at"))
 
         # - Start simulation
         self.assertTrue(self.is_element_present(By.ID, "start_simulation"))
@@ -98,7 +97,7 @@ class MetamundoControler(StaticLiveServerTestCase):
 
         # A status box shows tells us where the blob was placed.
         status_box = self.browser.find_element_by_id("status_box")
-        self.assertIn("New blob was spawned at:", status_box.text)
+        self.assertIn("We have a newcomer!", status_box.text)
 
         # There is a message with all blobs showing now:
         self.assertTrue(self.is_element_present(By.ID, "all_blobs"))

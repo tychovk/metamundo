@@ -24,3 +24,6 @@ http://jsfiddle.net/6qkdP/2/
 
 for postgresql:
 sudo -u postgres psql
+
+heroku update tables:
+heroku run python manage.py migrate

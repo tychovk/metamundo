@@ -47,8 +47,8 @@ def add_blob(request, world_id):
     if request.method == 'POST':
         if request.POST.get('spawn_blob'):
             new_blob = request.POST.get('entered_blob_coords')
-        elif request.POST.get('add_blob_at'):
-            new_blob = request.POST.get('selected_blob_coords')
+            if new_blob is '':
+                new_blob = request.POST.get('selected_blob_coords')
 
         pop_control_value = request.POST.get('override_hidden')
         pop_control = update_session(request, pop_control_value, 'pop_control_override', 'on', 'off')
@@ -67,6 +67,7 @@ def add_blob(request, world_id):
     
         Blob.objects.bulk_create(blobs_query)
         '''
+
         x = None
         y = None
         if new_blob:

@@ -89,9 +89,6 @@
 
 
         <div class="form-group">
-          <input type="submit" name="add_blob_at"
-                 class="btn btn-default"
-                 value="Spawn blob in selected coordinates"/>
           <input type="hidden" name="selected_blob_coords" 
                  value="" 
                  id="clickedField"/>
@@ -108,26 +105,24 @@
         </div>
 
 
-
-
-
-
         <div class="form-group">
           <input type="submit" id="start_simulation"
                  class="btn btn-success disabled"
                  value="Start simulation" />
         </div>
-        <div class="jumbotron" id="status_box">
+        <div id="status_box">
           {{ request.session.status_message }}
           
           {% if blobs %}
-            <br><span id="all_blobs">All blobs:
+            <div id="all_blobs"><small>
+              All blobs:
               {% for blob in blobs %}
                 ({{ blob.x }}, {{ blob.y }}) 
               {% endfor %} 
-            </span>
+            </small></div>
           {% endif %}
         </div>
+
        </div>
       </div>
       <p>
