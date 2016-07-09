@@ -30,16 +30,20 @@ def new_world(request):
 
 def view_world(request, world_id):
     world = World.objects.get(id=world_id)
+    worlds = World.objects.values('id', 'name')
 #    if hasattr(world, 'world_coords'):
 #        world_coords = json.loads(world.world_coords) # what is going on here
     blobs = Blob.objects.all().filter(world=world)
+
 
     if 'pop_control_override' not in request.session:
         request.session['pop_control_override'] = 'on'
 
     return render(request, 'control_panel.html', 
                 { 'world': world,
-                  'blobs': blobs})
+                  'blobs': blobs,
+                  'worlds': worlds
+                  })
 
 
 def add_blob(request, world_id):
@@ -113,7 +117,7 @@ def control_panel(request):
 
 
 def new_grid(request):
-    if request.method == 'POST':    
+    if request.method == 'POST':
         world = World.objects.create()
         return redirect('/grid/{}'.format(world.id))
     return render(request, 'grid.html', {'world': False})
