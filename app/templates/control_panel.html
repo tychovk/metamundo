@@ -124,16 +124,17 @@
                      value="{{ request.session.pop_control_override }}" 
                      id="override_hidden"/>
           </div>
+          {% csrf_token %}
+        </form>
 
           <p>
             <div class="form-group">
               <input type="submit" id="start_simulation"
-                     class="btn btn-success disabled"
-                     value="Start simulation" />
+                     class="btn btn-success"
+                     value="Walk the world" />
             </div>
           </p>
-          {% csrf_token %}
-        </form>
+
 
         <div id="status_box">
           {{ request.session.status_message }}

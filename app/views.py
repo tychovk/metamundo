@@ -56,7 +56,7 @@ def add_blob(request, world_id):
 
         pop_control_value = request.POST.get('override_hidden')
         pop_control = update_session(request, pop_control_value, 'pop_control_override', 'on', 'off')
-        logging.info(pop_control)
+
         
         '''
         # future use
