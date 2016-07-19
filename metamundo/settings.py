@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'gz18qz-dh8+1k-)vnc=4v!^mh!7p6yvc(3ni$+lpp!7&k9u3-j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', 'metamundo.herokuapp.com']
 
