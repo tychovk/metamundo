@@ -2,9 +2,10 @@ from django.test import TestCase
 from django.core.urlresolvers import resolve
 from django.http import HttpRequest
 from django.template.loader import render_to_string
+from django.core import serializers
 
 from app.generator import WorldGrid, BlobGenerator
-from app.views import home_page, control_panel, new_world, view_world
+from app.views import home_page, control_panel, new_world, world
 from app.models import World, Blob
 
 import logging
@@ -17,7 +18,7 @@ logging.basicConfig(level=logging.INFO)
 class ControlPanelTest(TestCase):
 
     def test_control_panel_url_resolves(self):
-        found = resolve('/world/new')
+        found = resolve('/control_panel/new')
         self.assertEqual(found.func, new_world)
 
 
@@ -30,7 +31,7 @@ class ControlPanelTest(TestCase):
 
     def test_saving_new_world_from_POST_request(self):
         self.client.post(
-            '/world/new',
+            '/control_panel/new',
         )
 
         self.assertEqual(World.objects.count(), 1)
@@ -41,12 +42,12 @@ class ControlPanelTest(TestCase):
         world = World.objects.create()
 
         response = self.client.post(
-            '/world/{}/add_blob'.format(world.id),
+            '/control_panel/{}/add_blob'.format(world.id),
             data={'entered_blob_coords': "1 2", 'spawn_blob': 'Spawn Blob',
                   'override_hidden': 'off'}
         )
 
-        self.assertRedirects(response, '/world/{}/'.format(world.id))
+        self.assertRedirects(response, '/control_panel/{}/'.format(world.id))
 
 
     # Doesn't seem to work with templates that receive JSON?
@@ -100,7 +101,7 @@ class NewWorldTest(TestCase):
 
     def test_saving_new_world_from_POST_request(self):
         self.client.post(
-            '/world/new',
+            '/control_panel/new',
         )
 
         self.assertEqual(World.objects.count(), 1)
@@ -136,7 +137,7 @@ class BlobSpawnTest(TestCase):
         world = World.objects.create()
 
         self.client.post(
-            '/world/{}/add_blob'.format(world.id),
+            '/control_panel/{}/add_blob'.format(world.id),
             data={'entered_blob_coords': "11 5", 'spawn_blob': 'Spawn Blob',
                   'override_hidden': 'off'}
         )
@@ -193,18 +194,17 @@ class BlobSpawnTest(TestCase):
         Blob.objects.create(x=7, y=8, world=other_world)
 
         response = self.client.get('/world/{}/'.format(correct_world.id))
+        response = json.loads(response.context['blobs'])
 
-
-
-        self.assertEqual(1, response.context['blobs'][0].x)
-        self.assertEqual(2, response.context['blobs'][0].y)
-        self.assertEqual(3, response.context['blobs'][1].x)
-        self.assertEqual(4, response.context['blobs'][1].y)
-        for blob in response.context['blobs']:
-            self.assertNotEqual(5, blob.x)
-            self.assertNotEqual(6, blob.y)
-            self.assertNotEqual(7, blob.x)
-            self.assertNotEqual(8, blob.y)
+        self.assertEqual(1, response[0]['fields']['x'])
+        self.assertEqual(2, response[0]['fields']['y'])
+        self.assertEqual(3, response[1]['fields']['x'])
+        self.assertEqual(4, response[1]['fields']['y'])
+        for blob in response:
+            self.assertNotEqual(5, blob['fields']['x'])
+            self.assertNotEqual(6, blob['fields']['y'])
+            self.assertNotEqual(7, blob['fields']['x'])
+            self.assertNotEqual(8, blob['fields']['y'])
 
 class BlobGeneratorTest(TestCase):
 

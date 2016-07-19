@@ -21,9 +21,14 @@ from app import views
 
 urlpatterns = [
     url(r'^$', views.home_page, name='home'),
-    url(r'^world/new$', views.new_world, name='new_world'),
+    url(r'^control_panel/new$', views.new_world, name='new_world'),
+    url(r'^control_panel/$', views.control_panel, name='control_panel'),
+    url(r'^control_panel/(\d+)/$', views.control_panel_world, name='control_panel_world'),
+    url(r'^control_panel/(\d+)/add_blob$', views.add_blob, name='add_blob'),
     url(r'^world/(\d+)/$', views.view_world, name='view_world'),
-    url(r'^world/(\d+)/add_blob$', views.add_blob, name='add_blob'),
+    url(r'^world/$', views.world, name='world'),
+
+
     url(r'^grid/(\d+)/$', views.view_grid, name='view_grid'),
     url(r'^grid/new$', views.new_grid, name='new_grid'),
     url(r'^about/$', views.about, name='about'),

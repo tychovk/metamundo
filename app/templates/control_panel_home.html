@@ -47,11 +47,22 @@
 {% block body %}
 <div class="container">
   <div class="col-md-8 col-md-offset-2" id="banner">
+    {% if not world %}
+
+      No world yet... 
+
+      <!-- <div id='grid_container2'></div> -->
+
+      <!-- <div id='jxgbox' class='jxgbox' style='width:400px; height:400px;'></div> -->
+
+
+    {% elif world %}
+
       <div class='jumbotron'>
         <p>
           <div class="btn-group">
             <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                Switch world
+                Existing worlds
                 <span class="caret"></span> <!-- what does this do? -->
               </a>
               <ul class="dropdown-menu">
@@ -71,18 +82,12 @@
             <form method="POST" action="/control_panel/new">
               <input type="submit" 
                      class="btn btn-primary"
-                     value="Start new world" 
+                     value="Start New World" 
                      id="start_world"/>
               {% csrf_token %}
             </form>
           </div>
         </p>
-        {% if not world %}
-
-          No world yet... 
-
-        {% elif world %}
-
 
         <p>This world may be empty. This world may be full of blobs, or just 
         have some lonely blobs scattered around somewhere. You have the power
@@ -149,9 +154,8 @@
       <div class="grid-container" style="clear:both;" id='grid_container'></div>
 
       <div id='world_with_blobs_container'></div>
-    {% endif %}
     </div>
-
+  {% endif %}
 
 
 {% endblock %}

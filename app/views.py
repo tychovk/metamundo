@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from app.models import World, Blob
 from app.generator import WorldGrid, BlobGenerator
+from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
+#from django.http import JsonResponse
 import json
 import logging
 import re
@@ -25,10 +28,10 @@ def new_world(request):
         del request.session['pop_control_override']
     if 'status_message' in request.session:
         del request.session['status_message']
-    return redirect('/world/{}/'.format(world.id))
+    return redirect('/control_panel/{}/'.format(world.id))
 
 
-def view_world(request, world_id):
+def control_panel_world(request, world_id):
     world = World.objects.get(id=world_id)
     worlds = World.objects.values('id', 'name')
 #    if hasattr(world, 'world_coords'):
@@ -44,6 +47,15 @@ def view_world(request, world_id):
                   'blobs': blobs,
                   'worlds': worlds
                   })
+
+
+def control_panel(request):
+    worlds = World.objects.values('id', 'name')
+
+    return render(request, 'control_panel.html', 
+                { 'worlds': worlds })
+
+
 
 
 def add_blob(request, world_id):
@@ -86,7 +98,7 @@ def add_blob(request, world_id):
                                                     "in 'x y' style. Help me, "\
                                                     "help you!"\
                                                     .format(new_blob)
-                return redirect('/world/{}/'.format(world.id))
+                return redirect('/control_panel/{}/'.format(world.id))
 
         blob_gen = BlobGenerator(world)
         spawn_blob = blob_gen.spawn_blob(new_blob_x=x, new_blob_y=y, 
@@ -109,11 +121,27 @@ def add_blob(request, world_id):
                                    "comfortable popping into existence so "\
                                    "close to other blobs. "\
                                    "Hmm... Maybe a bit farther away."
-    return redirect('/world/{}/'.format(world.id))
+    return redirect('/control_panel/{}/'.format(world.id))
 
 
-def control_panel(request):
-    return render(request, 'control_panel.html', {'world': False})
+
+def world(request):
+    worlds = World.objects.values('id', 'name')
+    return render(request, 'world.html', { 'worlds': worlds })
+
+def view_world(request, world_id):
+    world = World.objects.get(id=world_id)
+    blobs = Blob.objects.all().filter(world=world)
+
+    blobs = serializers.serialize('json', blobs)
+    world = serializers.serialize('json', World.objects.filter(pk=world_id))
+
+    worlds = World.objects.values('id', 'name')
+
+    return render(request, 'world.html', {'world': world,
+                                          'blobs': blobs,
+                                          'worlds': worlds
+                                         })
 
 
 def new_grid(request):
