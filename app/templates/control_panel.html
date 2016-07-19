@@ -51,20 +51,20 @@
         <p>
           <div class="btn-group">
             <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                Switch world
-                <span class="caret"></span> <!-- what does this do? -->
-              </a>
-              <ul class="dropdown-menu">
-                {% for world in worlds %}
-                  <li><a href="/control_panel/{{ world.id }}/">
-                    {% if world.name %}
-                      {{ world.name }}
-                    {% else %}
-                      {{ world.id }}
-                    {% endif %}
-                  </a></li>
-                {% endfor %}
-              </ul>
+              Switch world
+              <span class="caret"></span> <!-- what does this do? -->
+            </a>
+            <ul class="dropdown-menu">
+              {% for world in worlds %}
+                <li><a href="/control_panel/{{ world.id }}/">
+                  {% if world.name %}
+                    {{ world.name }}
+                  {% else %}
+                    {{ world.id }}
+                  {% endif %}
+                </a></li>
+              {% endfor %}
+            </ul>
           </div>
 
           <div class="form-inline form-group pull-right">
@@ -79,7 +79,18 @@
         </p>
         {% if not world %}
 
-          No world yet... 
+          {% if worlds %}
+
+          Choose one of the existing worlds, or explore a new one...
+
+          {% else %}
+
+            No world yet... 
+
+          </div>
+          </div>
+
+          {% endif %}
 
         {% elif world %}
 

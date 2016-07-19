@@ -24,7 +24,7 @@
 <div class="container">
     <div class="col-md-8 col-md-offset-2" id="banner">
       <div class='jumbotron'>
-
+        <p>
           <div class="btn-group">
             <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
               Switch world
@@ -32,7 +32,7 @@
             </a>
           <ul class="dropdown-menu">
             {% for world in worlds %}
-              <li><a href="/control_panel/{{ world.id }}/">
+              <li><a href="/world/{{ world.id }}/">
                 {% if world.name %}
                   {{ world.name }}
                 {% else %}
@@ -43,21 +43,29 @@
           </ul>
         </div>
 
-    <div class="form-inline form-group pull-right">
-    <form method="POST" action="/control_panel/new">
-      <input type="submit" 
-             class="btn btn-primary"
-             value="Start new world" 
-             id="start_world"/>
-      {% csrf_token %}
-    </form>
-    </div>
+        <div class="form-inline form-group pull-right">
+        <form method="POST" action="/control_panel/new">
+          <input type="submit" 
+                 class="btn btn-primary"
+                 value="Start new world" 
+                 id="start_world"/>
+          {% csrf_token %}
+        </form>
+        </div>
+        </p>
     {% if not world %}
+        {% if worlds %}
 
-      No world yet... 
+        Choose one of the existing worlds, or explore a new one...
 
-    </div>
-    </div>
+        {% else %}
+
+          No world yet... 
+
+        </div>
+        </div>
+
+        {% endif %}
 
     {% elif world %}
 
